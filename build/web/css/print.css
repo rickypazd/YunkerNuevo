@@ -1,0 +1,23 @@
+
+html{
+    background-color: #666666;
+}
+@Page {
+    size: landscape;
+}
+body{
+    background-color: #fff;
+    width: 50mm; height: 20mm; text-align: center;
+    margin: 2mm;
+}
+img {
+    height: 10mm;
+    width: auto;
+    margin: 0;
+}
+p{
+    font-size: 2mm;
+    margin: 0;
+}
+
+

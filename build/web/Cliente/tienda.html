@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+
+    <!-- Mirrored from template.8guild.com/bushido/v1.4/shop-filters-left-3cols.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 20 Jul 2019 14:46:10 GMT -->
+    <head>
+        <title>Servisis</title>
+        <meta charset="utf-8">
+
+
+        <meta name="keywords" content="responsive html5 template, e-commerce, shop, bootstrap 3.0, css, jquery, flat, modern" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+               
+        <link href="css/styles.css" rel="stylesheet" type="text/css"/>
+
+        <script src="js/libs/jquery-1.11.1.min.js" type="text/javascript"></script>
+        <script src="js/libs/jquery-ui-1.10.4.custom.min.js"></script>
+        <script src="js/plugins/bootstrap.min.js"></script>
+        <script src="js/MyFunction/load.js" type="text/javascript"></script>
+        <script src="js/header.js" type="text/javascript"></script>
+        <script src="js/Tienda/Tienda.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div id="header"></div>
+        <div class="page-content">
+            <section class="catalog-grid">
+                <div class="container">
+                    <h2 class="with-sorting">Tienda de repuestos.</h2>
+
+                    <div class="subnav">
+                        Filtros Activos
+                        <div id="filtros">
+                            <div id="filCategoria"></div>
+                            <div id="filSubCategoria"></div>
+                            <div id="filMarca"></div>
+                            <div id="filModelo"></div>
+                            <div id="filPrecio"></div>
+                           
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+
+                        <!--Filters-->
+                        <div class="filters-mobile col-lg-3 col-md-3 col-sm-4">
+                            <div class="shop-filters">
+
+                                <!--Price Section-->
+                                <section class="filter-section">
+                                    <h3>Filtrar por precio.</h3>
+                                    
+
+                                        <div class="price-btns">
+                                            <button class="btn btn-success btn-sm" id='price1' onclick='selectPrice(this);' value='{"ini":0, "fin": 50, "text": "Menos de 50 Bs."}'>Menos de 50 Bs.</button><br/>
+                                            <button class="btn btn-success btn-sm" id='price2' onclick='selectPrice(this);' value='{"ini":50,"fin":100,"text":"50 Bs. - 100 Bs."}'>50 Bs. - 100 Bs.</button><br/>
+                                            <button class="btn btn-success btn-sm" id='price3' onclick='selectPrice(this);' value='{"ini":100,"fin":300,"text":"100 Bs. - 300 Bs."}'>100 Bs. - 300 Bs.</button><br/>
+                                            <button class="btn btn-success btn-sm" id='price4' onclick='selectPrice(this);' value='{"ini":300,"fin":0,"text":"Mas de 300 Bs."}'>Mas de 300 Bs.</button>
+                                        </div>
+
+                                    
+                                </section>
+
+                                  <!--Categories Section-->
+                                <section class="filter-section">
+                                    <h3>Categorias</h3>
+                                    <div id="accordion">
+                                     
+                                        
+                                    </div>
+                                </section>
+                                <!--Colors Section-->
+                                <section class="filter-section">
+                                    <h3>Filtrar por vehiculo.</h3>
+                                    <span class="clear clearChecks">Ver todos.</span>
+                                    <div id="acorMarcas">
+                                        
+                                    </div>
+                                </section>
+
+                                <!--Colors Section-->
+                       
+
+                              
+                            </div>
+                        </div>
+
+                        <!--Tiles-->
+                        <div class="col-lg-9 col-md-9 col-sm-8">
+                            <div class="row" id="listaRep">
+                                <!--Tile-->
+                                
+                                <!--Tile-->
+                                
+                            </div>
+                            <!--Pagination-->
+                            <ul class="pagination">
+                                <li class="prev-page"><a class="icon-arrow-left" href="#"></a></li>
+                                <li class="active"><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">4</a></li>
+                                <li class="next-page"><a class="icon-arrow-right" href="#"></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section><!--Catalog Grid Close-->
+
+            <!--Brands Carousel Widget-->
+            <section class="brand-carousel">
+                <div class="container">
+                    <h2>Brands in our shop</h2>
+                    <div class="inner">
+                        <a class="item" href="#"><img src="img/brands/jquery.png" alt="jQuery"/></a>
+                        <a class="item" href="#"><img src="img/brands/wp.png" alt="WordPress"/></a>
+                        <a class="item" href="#"><img src="img/brands/woo.png" alt="WooCommerce"/></a>
+                        <a class="item" href="#"><img src="img/brands/android.png" alt="Android"/></a>
+                        <a class="item" href="#"><img src="img/brands/macgasm.png" alt="Macgasm"/></a>
+                        <a class="item" href="#"><img src="img/brands/dropbox.png" alt="Dropbox"/></a>
+                    </div>
+                </div>
+            </section><!--Brands Carousel Close-->
+
+        </div><!--Page Content Close-->
+
+        <!--Sticky Buttons-->
+        <div class="sticky-btns">
+            <form class="quick-contact ajax-form" method="post" name="quick-contact">
+                <h3>Contact us</h3>
+                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do.</p>
+                <div class="form-group">
+                    <label for="qc-name">Full name</label>
+                    <input class="form-control input-sm" type="text" name="name" id="qc-name" placeholder="Enter full name">
+                </div>
+                <div class="form-group">
+                    <label for="qc-email">Email</label>
+                    <input class="form-control input-sm" type="email" name="email" id="qc-email" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="qc-message">Your message</label>
+                    <textarea class="form-control input-sm" name="message" id="qc-message" placeholder="Enter your message"></textarea>
+                </div>
+                <!-- Validation Response -->
+                <div class="response-holder"></div>
+                <!-- Response End -->
+                <input class="btn btn-success btn-sm btn-block" type="submit" value="Send">
+            </form>
+            <span id="qcf-btn"><i class="fa fa-envelope"></i></span>
+            <span id="scrollTop-btn"><i class="fa fa-chevron-up"></i></span>
+        </div><!--Sticky Buttons Close-->
+
+       
+
+        
+
+
+    </body><!--Body Close-->
+
+    <!-- Mirrored from template.8guild.com/bushido/v1.4/shop-filters-left-3cols.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 20 Jul 2019 14:46:12 GMT -->
+</html>

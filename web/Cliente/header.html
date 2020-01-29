@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Bushido - HTML5 E-Commerce Template</title>
+        <meta name="description" content="Responsive HTML5 E-Commerce Template" />
+        <meta name="keywords" content="responsive html5 template, e-commerce, shop, bootstrap 3.0, css, jquery, flat, modern" />
+        <meta name="author" content="8Guild" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <!--<link rel="icon" href="favicon.ico" type="image/x-icon">-->
+
+        <!--<link href="masterslider/style/masterslider.css" rel="stylesheet" media="screen">-->
+        <link href="css/styles.css" rel="stylesheet" media="screen">
+        <!--<link class="color-scheme" href="css/colors/color-default.css" rel="stylesheet" media="screen">-->
+        <!--<script src="js/libs/modernizr.custom.js"></script>-->
+        <script src="js/libs/jquery-1.11.1.min.js"></script>
+        <script src="js/libs/jquery-ui-1.10.4.custom.min.js"></script>
+        <!--<script src="js/libs/jquery.easing.min.js"></script>-->
+        <script src="js/plugins/bootstrap.min.js"></script>
+        <!--<script src="js/plugins/smoothscroll.js"></script>-->
+        <script src="js/plugins/jquery.validate.min.js"></script>
+        <!--<script src="js/plugins/icheck.min.js"></script>-->
+        <script src="js/plugins/jquery.placeholder.js"></script>
+        <!--<script src="js/plugins/jquery.stellar.min.js"></script>-->
+        <!--<script src="js/plugins/jquery.touchSwipe.min.js"></script>-->
+        <!--<script src="js/plugins/jquery.shuffle.min.js"></script>-->
+        <!--<script src="js/plugins/lightGallery.min.js"></script>-->
+        <!--<script src="js/plugins/owl.carousel.min.js"></script>-->
+        <!--<script src="js/plugins/masterslider.min.js"></script>-->
+        <!--<script src="mailer/mailer.js"></script>-->
+        <script src="js/scripts.js"></script>
+
+        <!--<script src="color-switcher/color-switcher.js"></script>-->
+    </head>
+    <body>
+        <header data-offset-top="500" data-stuck="600" id="header"><!--data-offset-top is when header converts to small variant and data-stuck when it becomes visible. Values in px represent position of scroll from top. Make sure there is at least 100px between those two values for smooth animation-->
+
+            <!--Search Form-->
+
+
+            <!--Split Background-->
+            <div class="left-bg"></div>
+            <div class="right-bg"></div>
+
+            <div class="container" style="">
+                <a class="logo" href="index.html"><img src="img/logofullpart.png" alt="Servisis" style="max-height: 45px;"/></a>
+
+                <!--Language / Currency Switchers--> 
+
+
+                <!--Mobile Menu Toggle-->
+                <div class="menu-toggle"><i class="fa fa-list"></i></div>
+                <div class="mobile-border"><span></span></div>
+
+                <!--Main Menu-->
+                <nav class="menu">
+                    <ul class="main">
+                        <li class="has-submenu"><a href="index.html">Inicio<i class="fa fa-chevron-down"></i></a><!--Class "has-submenu" for proper highlighting and dropdown-->
+                            
+                        </li>
+                        <li class="has-submenu"><a href="tienda.html">Tienda<i class="fa fa-chevron-down"></i></a>
+                           
+                        </li>
+                        <li class="has-submenu"><a href="carrito.html">Carrito<i class="fa fa-chevron-down"></i></a>
+                        
+                        </li>
+                    
+                        <li class="hide-sm"><a href="favoritos.html">Favoritos</a></li>
+                    </ul>
+                    <ul class="catalog">
+                        <li><a href="marcas.html">Marcas</a></li>
+                        <li><a href="categorias.html">Categorias</a></li>
+                        <li><a href="nosotros.html">Nosotros</a></li>
+                        
+                    </ul>
+                </nav>
+
+                <!--Toolbar-->
+                <div class="toolbar group">
+                    <!--<button class="search-btn btn-outlined-invert"><i class="icon-magnifier"></i></button>-->
+                    <div class="middle-btns">
+                        <a class="btn-outlined-invert" href="favoritos.html"><i class="icon-heart"></i> <span>Favoritos</span></a>
+                        <a class="login-btn btn-outlined-invert" href="#" data-toggle="modal" data-target="#loginModal"><i class="icon-profile"></i> <span>Login</span></a>
+                    </div>
+                    <div class="cart-btn">
+                        <a class="btn btn-outlined-invert" href="carrito.html"><i class="icon-shopping-cart-content"></i><span id="cantidadCarrito">0</span></a>
+
+                        <!--Cart Dropdown-->
+                        <div class="cart-dropdown">
+                            <span></span><!--Small rectangle to overlap Cart button-->
+                            <div class="body">
+                                <table id="itensCarrito">
+                                    <tr>
+                                        <th>Repuesto</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                    </tr>
+
+
+
+                                </table>
+                            </div>
+                            <div class="footer group">
+                                <div class="buttons">
+                                    <!--<a class="btn btn-outlined-invert" href="checkout.html"><i class="icon-download"></i>Checkout</a>-->
+                                    <a class="btn btn-outlined-invert" href="carrito.html"><i class="icon-shopping-cart-content"></i>Carrito</a>
+                                </div>
+                                <div class="total " id="totalCarrito">0 Bs.</div>
+                            </div>
+                        </div><!--Cart Dropdown Close-->
+                    </div>
+                </div><!--Toolbar Close-->
+            </div>
+            <div class="modal fade" id="ModalAddCart" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Agregar al carrito.</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <section class="shopping-cart">
+                               
+                                    <div class="row">
+
+                                        <!--Items List-->
+                                        <div class="col-lg-12 col-md-12">
+
+                                            <table class="items-list">
+                                                <thead>
+                                                     <th>&nbsp;</th>
+                                                        <th>Nombre</th>
+                                                        <th>Precio</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Total</th>
+                                                </thead>
+                                                <tbody id="ModalAddCartBody">
+                                                    <!--Item-->
+
+                                                    <!--Item-->
+
+                                                </tbody></table>
+                                        </div>
+                                    
+                                </div>
+                            </section>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-primary" id="BtmAgregarCarrito">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </body>
+</html>

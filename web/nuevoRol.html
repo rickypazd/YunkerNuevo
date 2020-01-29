@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>SIETE</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css /style.css" rel="stylesheet" type="text/css"/>
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="css/RRHH/rrhh.css" rel="stylesheet" type="text/css"/>
+        <script src="plugin/jquery/jquery.min.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/bootstrap.min.js" type="text/javascript"></script>
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap-grid.min.css" rel="stylesheet" type="text/css"/>
+          <script src="js/verifySession.js" type="text/javascript"></script>
+        <script src="js/RRHH/nuevoRol.js" type="text/javascript"></script>
+    </head>
+    <body data-permisourl="Editar roles y permisos.">
+        <h1>Nuevo Rol</h1>
+            <a href="rolesypermisos.html" class="btn btn-outline-danger">Volver</a>
+        <div class="container">
+             <form class="col-6">
+            <div><span>Nombre:</span><input type="text" id="in_nombre_rol" placeholder="Nombre del Rol..."/></div>
+        </form>
+            <h4>Seleccione los permisos del nuevo rol</h4>
+            <p>Click para agg permiso</p>
+                 <div class="row d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" >
+                         Agregar Permiso
+                    </button>
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Nuevo Permiso</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div><span>Nombre:</span><input type="text" id="nuevo_permiso_nombre" placeholder="Nombre del Permiso"/></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-primary" onclick="nuevo_permiso();">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+                  
+            <div class="row">
+                <div class="col-6 ">
+                    <p>Permisos agregados al ROL:</p>
+                    <ul id="ul_permisos_agg" class="ul_permisos list-unstyled">
+
+                    </ul>
+                </div>
+                
+                <div class="col-6">                   
+                    <p>Permisos disponibles:</p>
+                    <ul id="ul_permisos" class="ul_permisos list-unstyled">
+
+                    </ul>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <button type="button" class="btn btn-primary" onclick="ok_agg_rol();" >
+                         AGREGAR
+                    </button>
+            </div>
+        </div>
+
+
+    </body>
+</html>

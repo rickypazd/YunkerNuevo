@@ -1,0 +1,111 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Servisis</title>
+        <meta name="description" content="Servisis">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+        <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+
+        <script src="plugin/jquery/jquery.min.js" type="text/javascript"></script>
+        <script src="js/eventos/navBar.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/popper.min.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/bootstrap.min.js" type="text/javascript"></script>
+
+
+        <script src="assets/js/matchHeigh.js" type="text/javascript"></script>
+        <script src="assets/js/main.js"></script>
+        <script src="js/eventos/verifySession.js" type="text/javascript"></script>
+        <script src="js/index.js" type="text/javascript"></script>
+        <script src="js/eventos/load.js" type="text/javascript"></script>
+
+    </head>
+
+    <body>
+        <div id="right-panel" class="right-panel">
+
+            <div class="content">
+                <!-- Animated -->
+                <div class="animated fadeIn">
+                    <h2>ACCIONES</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>RRHH </strong>
+                            <small> Acciones en el modulo de recursos humanos.</small>
+                        </div>
+                        <div class="card-body">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="ver_pagina('rolesypermisos.html');">Roles y permisos.</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="ver_pagina('UsrList.html');" data-permiso="ver_lista_de_usuarios">Usuarios.</button>
+                        </div>
+                    </div>
+                    <h2>Vehiculos</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>Vehiculos </strong>
+                            <small> Acciones en el modulo de Vehiculos.</small>
+                        </div>
+                        <div class="card-body">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="ver_pagina('VehMarcaList.html');">Marcas.</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="ver_pagina('VehModeloList.html');">Modelos.</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="ver_pagina('VehList.html');">Vehiculos.</button>
+                            
+                        </div>
+                    </div>
+                    <h2>Repuestos</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>Repuestos </strong>
+                            <small> Acciones en el modulo de Repuestos.</small>
+                        </div>
+                        <div class="card-body">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="ver_pagina('RepCategoriaList.html');">Categorias.</button>                           
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="ver_pagina('RepList.html');">Repuestos.</button>                           
+                        </div>
+                    </div>
+                    <h2>Almacenes</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>Almacenes </strong>
+                            <small> Acciones en el modulo de almacenes.</small>
+                        </div>
+                        <div class="card-body">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="ver_pagina('AlmacenList.html');">Almacenes.</button>                           
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="ver_pagina('CompraRep.html');">Comprar repuesto.</button>                           
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="ver_pagina('CompraList.html');">Historial de compras.</button>                           
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="ver_pagina('VentaRep.html');">Vender repuesto.</button>                           
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="ver_pagina('VentaList.html');">Historial de ventas.</button>                           
+                            
+                        </div>
+                    </div>
+                    <h2>Indicadores</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>Reportes </strong>
+                            <small> Indicadores de datos.</small>
+                        </div>
+                        <div class="card-body">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="ver_pagina('IndicadorINEG.html');">Compras y ventas.</button>                           
+
+                            
+                            
+                        </div>
+                    </div>
+                    
+
+
+                </div>
+            </div>           
+            <!-- Footer -->
+
+            <!-- /.site-footer -->
+        </div>
+
+    </body>
+</html>

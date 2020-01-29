@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Servisis</title>
+        <meta name="description" content="Servisis">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap-grid.min.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+        <link href="plugin/date_pinker/datepicker.css" rel="stylesheet" type="text/css"/>
+        <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
+
+        <script src="plugin/jquery/jquery.min.js" type="text/javascript"></script>
+        <script src="js/eventos/navBar.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/popper.min.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="assets/js/matchHeigh.js" type="text/javascript"></script>
+        <script src="plugin/date_pinker/datepicker.js" type="text/javascript"></script>
+        <script src="assets/js/main.js"></script>
+
+        <script src="js/eventos/verifySession.js" type="text/javascript"></script>
+        <script src="js/eventos/load.js" type="text/javascript"></script>
+        <script src="js/Compra/CompraRep.js" type="text/javascript"></script>
+        <script src="js/Compra/CompraRepList.js" type="text/javascript"></script>
+
+
+    </head>
+    <body>
+        <div id="right-panel" class="right-panel">
+            <div class="card-header text-center" style="background-color: whitesmoke" >
+                <h4 class="modal-title" id="exampleModalLabel">Comprar Repuesto.</h4>
+            </div>
+            <div class="content" style="background-color: white">              
+                <div class="row justify-content-between">
+                    <div class="col-sm-4">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Codigo : </span>
+                            </div>
+                            <input id="inpCodigoCompra" type="text" class="form-control" placeholder="00-00-00" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon2">Fecha : </span>
+                            </div>
+                            <input id="inpFecha" type="text" class="form-control" placeholder="00/00/0000" aria-describedby="basic-addon2">
+                        </div>
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-4">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon3">Proveedor : </span>
+                            </div>
+                            <input id="inpProve" type="text" class="form-control" placeholder="Nombre de proveedor" aria-describedby="basic-addon3">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+
+                    <div class=" col-1">                               
+                        <button type="button" class="btn btn-primary " onclick="verArticulos();">Agregar Articulo</button>
+                    </div>                            
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12 align-content-center">
+
+                        <a><b>Cantidad:</b><span id="CantArt">(0)</span></a>
+                        <div  class='list-group-item list-group-item-action align-items-start'>
+                            <div class="row titulo_tabla">
+                                <div class="col-1">                                                                                                                
+                                    <label >Codigo</label>
+                                </div>
+                                <div class="col-1">
+                                    <label >foto</label>
+                                </div>
+                                <div class="col-2">
+                                    <label >Nombre</label>
+                                </div>
+                                <div class="col-3">                                                                                                                
+                                    <label >Descripcíon</label>
+                                </div>
+                                <div class="col-1">                                                                                                                
+                                    <label >Almacen</label>
+                                </div>
+                                <div class="col-1">
+                                    <label >Cantidad</label>
+                                </div>
+                                <div class="col-1">
+                                    <label >Precio</label>
+                                </div>
+                                <div class="col-1">
+                                    <label >Sub-Total</label>
+                                </div>
+                                <div class="col-1">
+                                    <label >Acciones</label>
+                                    <!--                                <div class="row" style="text-align: center;">
+                                                                            <div class="col-4 btnAction btnEditar"><img src="img/lapiz.svg" alt=""/>Editar</div>
+                                                                            <div class="col-4 btnAction btnEliminar">  <img src="img/bote-de-basura.svg" alt=""/>Eliminar</div>
+                                                                            <div class="col-4 btnAction btnVer"> Ver <img src="img/cheuron.svg" alt=""/></div>
+                                                                        </div>-->
+                                </div>
+                            </div>
+                        </div>                     
+                        <div id="listArticulos" data-pagina="0" >
+
+
+                        </div>
+                        <div  class='list-group-item list-group-item-action align-items-end'>
+                            <div class="row justify-content-end">
+                                <div class="col-1">                                                                                                                
+                                    <label >Total : </label>
+                                </div>
+                                <div class="col-1">                                                                                                                
+                                    <input type='number' class='form-control' id="inTotal" aria-label='Default' placeholder='0' value='0' disabled/>
+                                </div>
+                                <div class="col-2">                                                                                                                
+
+                                </div>
+
+                            </div>
+                        </div>      
+                        <div class="row justify-content-end mt-4">
+
+                            <div class=" col-3">                               
+                                <button type="button" class="btn btn-primary " onclick="realizarCompra();">Realizar compra</button>
+                            </div>                            
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal fade" id="modalArticulos" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog col-10" id="documentModal" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Repuestos</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Repuestos:</span>
+                                <span class="input-group-text"><i class="fa fa-search"></i>
+                                </span>
+                            </div>
+                            <input type="text" id="in_buscar" class="form-control" onkeyup="buscar(this);" placeholder="Busqueda por: Codigo, Nombre, Categoria, Sub-Categoria.">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 align-content-center">
+
+                                <a><b>Resultados:</b><span id="resultados">(0)</span></a>
+                                <div  class='list-group-item list-group-item-action align-items-start'>
+                                    <div class="row">
+                                        <div class="col-sm">                                                                                                                
+                                            <label >Codigo</label>
+                                        </div>
+                                        <div class="col-1">
+                                            <label >Foto</label>
+                                        </div>
+                                        <div class="col-2">                                                                                                                
+                                            <label >Nombre</label>
+                                        </div>
+                                        <div class="col-2">                                                                                                                
+                                            <label >Categoria</label>
+                                        </div>
+                                        <div class="col-2">                                                                                                                
+                                            <label >Sub Categoria</label>
+                                        </div>
+                                        <div class="col-1">                                                                                                                
+                                            <label >Precio</label>
+                                        </div>
+                                        <div class="col-2">
+                                            <label >Acciones</label>
+                                            <!--                                        <div class="row" style="text-align: center;">
+                                                                                        <div class="col-4 btnAction btnEditar"><img src="img/lapiz.svg" alt=""/>Editar</div>
+                                                                                        <div class="col-4 btnAction btnEliminar">  <img src="img/bote-de-basura.svg" alt=""/>Eliminar</div>
+                                                                                        <div class="col-4 btnAction btnVer"> Ver <img src="img/cheuron.svg" alt=""/></div>
+                                                                                    </div>-->
+
+
+
+
+                                        </div>
+                                    </div>
+                                </div>                     
+                                <div id="list_marcas" data-pagina="0" >
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalAlmacenes" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog col-10" id="documentModal" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Almacenes</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="content" style="background-color: white">                  
+                            <div class="card-body">
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="ver_pagina('AlmacenCreate.html');">Agregar almacen.</button>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Almacen</span>
+                                    <span class="input-group-text"><i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                                <input type="text" id="in_buscarAlmacen" class="form-control" onkeyup="cargarAlmacenes();" placeholder="Busqueda por: Nombre, Direccion.">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 align-content-center">
+
+                                    <a><b>Resultados:</b><span id="resultadosAlmacen">(0)</span></a>
+                                    <div  class='list-group-item list-group-item-action align-items-start'>
+                                        <div class="row titulo_tabla">
+                                            <div class="col-2">                                                                                                                
+                                                <label >nombre</label>
+                                            </div>
+                                            <div class="col-3">
+                                                <label >direccion</label>
+                                            </div>
+                                            <div class="col-2">                                                                                                                
+                                                <label >lat</label>
+                                            </div>
+                                            <div class="col-2">
+                                                <label >lng</label>
+                                            </div>
+
+
+                                            <div class="col-3">
+                                                <label >Acciones</label>
+                                                <!--                                        <div class="row" style="text-align: center;">
+                                                                                            <div class="col-4 btnAction btnEditar"><img src="img/lapiz.svg" alt=""/>Editar</div>
+                                                                                            <div class="col-4 btnAction btnEliminar">  <img src="img/bote-de-basura.svg" alt=""/>Eliminar</div>
+                                                                                            <div class="col-4 btnAction btnVer"> Ver <img src="img/cheuron.svg" alt=""/></div>
+                                                                                        </div>-->
+
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>                     
+                                    <div id="list" data-pagina="0" >
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-12" style="text-align: center; margin-top: 25px;">
+
+                                <img id="img-carga" src="img/cargando.gif" alt="" class="img-responsive center-block"/>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalAlmacenesdet" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog col-10" id="documentModal" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Almacenes</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="content" style="background-color: white">                  
+                            <canvas id="myCanvas" width="1000" height="800" style=" border: 2px solid black;"  >
+                                <p>This is fallback content 
+                                    for users of assistive technologies 
+                                    or of browsers that don't have 
+                                    full support for the Canvas API.</p>
+                            </canvas>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <script src="plugin/jcanvas.js" type="text/javascript"></script>
+            <script src="js/Almacen/CanvasSubAlmacensel.js" type="text/javascript"></script>
+        </div>
+    </body>
+</html>

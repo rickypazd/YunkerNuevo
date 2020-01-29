@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Servisis</title>
+        <meta name="description" content="Servisis">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap-grid.min.css" rel="stylesheet" type="text/css"/>
+        <link href="plugin/date_pinker/datepicker.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+        <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
+
+        <script src="plugin/jquery/jquery.min.js" type="text/javascript"></script>
+        <script src="js/eventos/navBar.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/popper.min.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="assets/js/matchHeigh.js" type="text/javascript"></script>
+        <script src="assets/js/main.js"></script>
+        <script src="plugin/date_pinker/datepicker.js" type="text/javascript"></script>
+        <link href="plugin/fileimput/css/fileinput.min.css" rel="stylesheet" type="text/css"/>
+        <link href="plugin/fileimput/themes/explorer-fa/theme.min.css" rel="stylesheet" type="text/css"/>
+        <script src="plugin/fileimput/js/plugins/sortable.min.js" type="text/javascript"></script>
+        <script src="plugin/fileimput/js/fileinput.min.js" type="text/javascript"></script>
+        <script src="plugin/fileimput/js/locales/es.js" type="text/javascript"></script>
+        <script src="plugin/fileimput/themes/explorer-fa/theme.min.js" type="text/javascript"></script>
+        <script src="plugin/fileimput/themes/fa/theme.min.js" type="text/javascript"></script>
+
+        <!--<script src="js/eventos/verifySession.js" type="text/javascript"></script>-->
+
+        
+        <script src="js/canvas.js" type="text/javascript"></script>
+        <script src="js/eventos/load.js" type="text/javascript"></script>
+    </head>
+    <body style="background-color: whitesmoke"> 
+        <style>
+            body {
+                margin: 0px;
+                padding: 0px;
+            }
+            #myCanvas{
+                border: black 1px solid;
+
+                position: relative;
+                padding: 0;
+
+                /*position: ;*/
+                top: 3%;
+                left: 0;
+                margin-top: 0px;
+                margin-left: 0px;
+            }
+            #imgenas{
+                position: absolute;
+                top: 0px;
+                right:  0px;
+
+            }
+        </style>
+        <div id="right-panel" class="right-panel">
+            <!-- Header-->
+
+
+
+            <div class="container " >
+                <div class="row " >
+                    <div class="col-md-6" >
+                        <canvas id="myCanvas" width="500" height="500" style=" border: 2px solid black;"  ></canvas>
+                    </div>
+
+
+
+                    <div class="col-md-6" >
+                        <h3>Lista de Partes Repuesto <a href="agregar_partes.html" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="float: right;"> Agregar </a> </h3> 
+                        <hr style="  border-top: 10px solid black;">
+
+                        <div class="row">
+                            <div class="col-md-12 align-content-center">
+
+                                <a><b>Resultados:</b><span id="resultados_partes">(0)</span></a>
+
+                                <div id="list_partes"  >
+                                    <a href='javaScript:void(0)' class='list-group-item list-group-item-action flex-column align-items-start'>
+                                        <div class="row">
+                                            <div class="col-2">                                                                                                                
+                                                <label >Codigo</label>
+                                            </div>
+                                            <div class="col-2">                                                                                                                
+                                                <label >Nombre</label>
+                                            </div>
+                                            <div class="col-2">
+                                                <label >Marca</label>
+                                            </div>
+                                            <div class="col-2">
+                                                <label >Precio</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <label >Descripcion</label>
+                                            </div>                                     
+                                        </div>
+                                    </a>                       
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--   <div class="row">
+                                  <div class="col-md-12 align-content-center">
+                                      <div id="lista_vehiculo_compatibles" class="list-group" >
+                                          <div class="row ">
+                                              <div class="col-2"><label >Nro.</label>
+                                                  <div> <p>1</p> </div>
+                                              </div>
+                                              <div class="col-2"><label >Imagen</label>
+                                                  <div><img id="foto_perfil"  src="data:image/png;base64,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" alt="img" style="width:100%; height: 50px;" />                           </div>
+                                              </div>
+                                              <div class="col-4"><label >Parte Descripción</label>
+                                                  <div> <p>Conjunto de eje
+                                                          43410-52210
+                                                          YARIS; CORRECTO </p> </div>
+                                              </div>
+                                              <div class="col-2"><label >Precio</label>
+                                                  <div>
+                                                      <p>$ 490.46</p>
+                                                  </div>
+                                              </div>
+                                              <div class="col-2"><label >Mostrar</label>
+                                                  <div><a href="agregar_partes.html" class="btn btn-outline-dark btn-sm">Detalle </a></div>
+                                              </div>
+                                          </div>
+                                      </div>                                        
+                                  </div>
+                              </div>  -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </body>
+</html>

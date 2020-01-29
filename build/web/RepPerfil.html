@@ -1,0 +1,586 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Servisis</title>
+        <meta name="description" content="Servisis">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap-grid.min.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+        <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
+        <link href="css/Profile.css" rel="stylesheet" type="text/css"/>
+        <script src="plugin/jquery/jquery.min.js" type="text/javascript"></script>
+
+        <script src="js/eventos/navBar.js" type="text/javascript"></script>
+
+        <script src="plugin/bootstrap-4.1.1/js/popper.min.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/bootstrap.min.js" type="text/javascript"></script>
+
+
+        <script src="assets/js/matchHeigh.js" type="text/javascript"></script>
+        <script src="assets/js/main.js"></script>
+        <script src="js/eventos/verifySession.js" type="text/javascript"></script>
+        <link href="plugin/fileimput/css/fileinput.min.css" rel="stylesheet" type="text/css"/>
+        <link href="plugin/fileimput/themes/explorer-fa/theme.min.css" rel="stylesheet" type="text/css"/>
+        <script src="plugin/fileimput/js/plugins/sortable.min.js" type="text/javascript"></script>
+        <script src="plugin/fileimput/js/fileinput.min.js" type="text/javascript"></script>
+        <script src="plugin/fileimput/js/locales/es.js" type="text/javascript"></script>
+        <script src="plugin/fileimput/themes/explorer-fa/theme.min.js" type="text/javascript"></script>
+        <script src="plugin/fileimput/themes/fa/theme.min.js" type="text/javascript"></script>
+        <script src="plugin/jquery.qrcode.min.js" type="text/javascript"></script>
+        
+
+        <script src="js/eventos/load.js" type="text/javascript"></script>
+        <script src="plugin/jquery.PrintArea.js" type="text/javascript"></script>
+    </head>
+
+    <body>
+        <div id="right-panel" class="right-panel">
+
+            <div class="content">
+                <!-- Animated -->
+                <button class="btn btn-outline-danger" onclick="window.history.back();">Volver</button>
+                <div class="card-header text-center" style="background-color: whitesmoke" >
+                    <h4 class="modal-title" id="exampleModalLabel">Perfil de repuesto.</h4>
+
+                </div>
+                <div class="animated fadeIn">
+
+                    <!--                    <ul class="list-unstyled list-group" style="margin-top: 8px;">
+                                            <li class="list-group-item">
+                                                <span>Acciones: </span>
+                                                <a href="#" id="editarPerfil" class="btn btn-outline-primary" ><i class='menu-icon fa fa-pencil'></i> Editar Perfil</a>
+                                                <a href="#titlePartes" id="editarEsquema" class="btn btn-outline-secondary" title="Administrar el esquema y partes del repuesto."><i class='menu-icon fa fa-file-image-o'></i> Esquema y partes.</a>
+                                                <a href="#" id="editarVehiculos" class="btn btn-outline-success" title="Administrar vehiculos para los que el repuesto funciona." ><i class='menu-icon fa fa-car'></i> Vehiculos</a>
+                                            </li>
+                    
+                    
+                                        </ul>-->
+
+                    <div class="container" style="margin-top: 16px;">  
+
+                        <div class="container emp-profile border border-secondary">
+                            <div class="" id="list_padres">
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="profile-img">
+                                        <img src="img/Sin-foto1.jpg" class="img-fluid rounded-circle" id="foto_perfil" alt="Foto"/>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="profile-head" style="height: 100%; min-height: 100px;">
+                                        <h6>
+                                            <b>Codigo : </b><span id="p_codigo"></span>
+                                        </h6>
+                                        <h5>
+                                            <b>Nombre : </b><span id="p_nombre"></span>
+                                        </h5>
+                                        <h5>
+                                            <b>Cantidad en stock: </b><span id="pCantidad">0</span>
+                                        </h5>
+                                        <p class="proile-rating">Precio : <span id="p_precio"></span></p>
+                                        <div class="">
+                                            <p><b>Categoria: </b><span id="p_categoria"></span></br><b>Sub Categoria: </b><span id="p_subcat"></span></p>
+
+                                          
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-3">
+                                    <div id="qrcode"></div>
+                                    <a class="btn btn-danger" href="javascript:void(0);" onclick="imprimirqr()">Print.</a>
+                                </div>
+
+                                <div class="col-12 mt-4">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#lista_detalle" role="tab" aria-controls="lista_detalle" aria-selected="true">Detalles.</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Vehiculos Compatibles.</a>
+                                        </li>
+                                    </ul>
+                                    <div class="col-md-12">
+                                        <div class="tab-content profile-tab" id="myTabContent">
+                                            <div class="tab-pane fade show active" id="lista_detalle" role="tabpanel" aria-labelledby="home-tab">
+
+                                            </div>
+                                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                                <div class="row">
+                                                    <div class="col-md-12 align-content-center">
+
+
+                                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="agg_vehiculo_rep()">
+                                                            Agregar Vehiculo
+                                                        </button>
+                                                        <div  class='list-group-item list-group-item-action align-items-start'>
+                                                            <div class="row titulo_tabla">
+                                                                <div class="col-1">                                                                                                                
+                                                                    <label >Clave</label>
+                                                                </div>
+                                                                <div class="col-1">
+                                                                    <label >Foto</label>
+                                                                </div>
+                                                                <div class="col-2">                                                                                                                
+                                                                    <label >Marca</label>
+                                                                </div>
+                                                                <div class="col-1">
+                                                                    <label >Foto</label>
+                                                                </div>
+                                                                <div class="col-2">                                                                                                                
+                                                                    <label >Modelo</label>
+                                                                </div>
+                                                                <div class="col-1">                                                                                                                
+                                                                    <label >Anho</label>
+                                                                </div>
+                                                                <div class="col-2">                                                                                                                
+                                                                    <label >Version</label>
+                                                                </div>
+
+                                                                <div class="col-2">
+                                                                    <label >Acciones</label>
+                                                                    <!--                                        <div class="row" style="text-align: center;">
+                                                                                                                <div class="col-4 btnAction btnEditar"><img src="img/lapiz.svg" alt=""/>Editar</div>
+                                                                                                                <div class="col-4 btnAction btnEliminar">  <img src="img/bote-de-basura.svg" alt=""/>Eliminar</div>
+                                                                                                                <div class="col-4 btnAction btnVer"> Ver <img src="img/cheuron.svg" alt=""/></div>
+                                                                                                            </div>-->
+
+
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>                     
+                                                        <div id="list_autos_activos" data-pagina="0" >
+
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="container emp-profile border border-secondary">
+                            <h4 id="titlePartes">Partes</h4>
+                            <h5 >Esquema</h5>
+                            <div id="contensinEsquema" class="row border border-secondary" style=" display: none;" >
+                                <div class="col-12">
+                                    <p>No se a cargado ningun esquema para este repuesto.</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="col-3">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal">
+                                                Subir esquema
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="contenEsquema" class="border border-secondary" style="display: none;" >
+
+                                <div class="col-12" >
+                                    <p>Selecciona una parte del esquema para agregar parte al repuesto.</p>
+                                </div>
+                                <div class="d-flex justify-content-center ">
+                                    <canvas id="myCanvas" width="500" height="500" style=" border: 2px solid black;"  >
+                                        <p>This is fallback content 
+                                            for users of assistive technologies 
+                                            or of browsers that don't have 
+                                            full support for the Canvas API.</p>
+                                    </canvas>
+                                </div>
+
+
+
+                            </div>
+
+                            <div class="card-body">
+                                <a id="btnAggParte" href="#" class="btn btn-outline-primary btn-sm">Agregar Parte</a>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Partes:</span>
+                                    <span class="input-group-text"><i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                                <input type="text" id="in_buscar_parte" class="form-control" onkeyup="buscarParte(this);" placeholder="Busqueda por: Codigo, Nombre">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 align-content-center">
+
+                                    <a><b>Resultados:</b><span id="resultados">(0)</span></a>
+                                    <div  class='list-group-item list-group-item-action align-items-start'>
+                                        <div class="row">
+                                            <div class="col-2">                                                                                                                
+                                                <label >Codigo</label>
+                                            </div>
+                                            <div class="col-1">
+                                                <label >Foto</label>
+                                            </div>
+                                            <div class="col-3">                                                                                                                
+                                                <label >Nombre</label>
+                                            </div>
+
+                                            <div class="col-2">                                                                                                                
+                                                <label >Precio</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <label >Acciones</label>
+                                                <!--                                        <div class="row" style="text-align: center;">
+                                                                                            <div class="col-4 btnAction btnEditar"><img src="img/lapiz.svg" alt=""/>Editar</div>
+                                                                                            <div class="col-4 btnAction btnEliminar">  <img src="img/bote-de-basura.svg" alt=""/>Eliminar</div>
+                                                                                            <div class="col-4 btnAction btnVer"> Ver <img src="img/cheuron.svg" alt=""/></div>
+                                                                                        </div>-->
+
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>                     
+                                    <div id="list_partes" data-pagina="0" >
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-12" style="text-align: center; margin-top: 25px;">
+
+                                <img id="img-carga" src="img/cargando.gif" alt="" style="display:none;" class="img-responsive center-block"/>
+
+
+                            </div>
+                        </div>       
+
+
+
+
+
+
+
+
+                    </div>
+                </div>           
+                <!-- Footer -->
+
+                <!-- /.site-footer -->
+            </div>
+        </div>
+        <div class="modal" id="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">SUBIR ESQUEMA</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+
+
+                            <form method="POST" action="repuestosController" id="submitform" enctype="multipart/form-data">
+                                <input type="hidden" name="evento" value="subirFotoEsquema"/>
+                                <input type="hidden" id="id_repuesto" name="id" value="0"/>
+                                <input type="hidden" name="TokenAcceso" value="servi12sis3"/>
+
+
+
+                                <div class="file-loading">
+                                    <input id="file-0d" name="archibo" class="file" type="file" accept="image/*">
+                                </div>
+
+                                <div class="form-group" style="text-align: center; margin-top: 20px;">
+
+                                    <button class="btn btn-primary">SUBIR</button>
+
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-lg" >
+                <div class="modal-content" >
+                    <div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button> <h4 class="modal-title">Registrar repuesto</h4> </div>
+                    <div class="card-body"  >  
+                        <div class="container form-group">              
+                            <div class="card">
+
+                                <div class="card-body" >  
+                                    <form method="POST" id="submitform2" enctype="multipart/form-data">
+
+                                        <div class="d-flex justify-content-center">
+                                            <label class="label-titulo" >Perfil: </label>
+                                            <input type="hidden" name="evento" value="registrar_repuesto_parte_esquema"/>
+                                            <input type="hidden" name="TokenAcceso" value="servi12sis3"/>
+                                            <input type="hidden" name="id_padre" value="servi12sis3"/>
+
+
+                                            <div>
+                                                <img id="foto_recorte"  src="" alt="img" />
+                                            </div>
+                                        </div>
+                                        <div class="form-row" style="margin-top: 8px;">
+                                            <div class="form-group col-md-6">
+                                                <label for="text_serie" class="label-titulo" >Codigo</label>
+                                                <input type="text" name="codigo" class="form-control color-input" id="text_serie" placeholder="Codigo">
+                                            </div>   
+                                            <div class="form-group col-md-6">
+                                                <label for="text_nombre" class="label-titulo" >Nombre</label>
+                                                <input type="text" name="nombre" class="form-control color-input" id="text_nombre"  placeholder="Nombre de pieza">
+                                            </div>  
+
+                                        </div>                        
+
+                                        <div class="form-row" >
+                                            <div class="form-group col-3">
+                                                <label for="text_precio" class="label-titulo" >Precio</label>
+                                                <input type="number" name="precio" class="form-control color-input" id="text_precio"  placeholder="Precio 0.0 Bs.">
+                                            </div>         
+                                        </div>                        
+
+
+                                    </form> 
+                                    <h3>Detalles de la pieza.</h3>
+                                    <div class="row">
+                                        <div class="col-md-12 align-content-center">
+                                            <div  class='list-group-item align-items-start'>
+                                                <div class="row">
+                                                    <div class="col-4">                                                                                                                
+                                                        <label >Nombre</label>
+                                                    </div>
+                                                    <div class="col-4">                                                                                                                
+                                                        <label >Valor</label>
+                                                    </div>
+                                                    <div class="col-4">                                                                                                                
+                                                        <label >Acciones</label>
+                                                        <button type="button" class="btn btn-primary " onclick="agg_detalle();">+</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>                     
+                                            <div id="list_marcas" data-pagina="0" >
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <br>
+                                </div> 
+                                <div class="text-center">
+                                    <div class="row" >
+                                        <div class=" col-12">                                
+                                            <button type="button" class="btn btn-primary " onclick="registrar_parte_esquema();">Guardar</button>
+                                        </div>                            
+                                    </div>
+                                </div>                
+                            </div>                     
+                        </div>
+                    </div>  
+                </div>
+
+            </div>
+        </div>
+        <div class="modal fade" id="AggVehiculo" role="dialog">
+            <div class="modal-dialog col-10" >
+                <div class="modal-content" >
+                    <div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button> <h4 class="modal-title">Agregar vehiculo.</h4> </div>
+                    <div class="card-body"  >  
+
+
+                        <div class="card-body">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="ver_pagina('VehCreate.html');">Agregar vehiculo.</button>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Vehiculos</span>
+                                <span class="input-group-text"><i class="fa fa-search"></i>
+                                </span>
+                            </div>
+                            <input type="text" id="in_buscar_ve_dis" class="form-control" onkeyup="agg_vehiculo_rep();" placeholder="Busqueda por: Clave, Marca, Modelo, Anho.">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 align-content-center">
+
+                                <a><b>Resultados:</b><span id="resultados_veh">(0)</span></a>
+                                <div  class='list-group-item list-group-item-action align-items-start'>
+                                    <div class="row titulo_tabla">
+                                        <div class="col-1">                                                                                                                
+                                            <label >Clave</label>
+                                        </div>
+                                        <div class="col-1">
+                                            <label >Foto</label>
+                                        </div>
+                                        <div class="col-2">                                                                                                                
+                                            <label >Marca</label>
+                                        </div>
+                                        <div class="col-1">
+                                            <label >Foto</label>
+                                        </div>
+                                        <div class="col-2">                                                                                                                
+                                            <label >Modelo</label>
+                                        </div>
+                                        <div class="col-2">                                                                                                                
+                                            <label >Anho</label>
+                                        </div>
+                                        <div class="col-2">                                                                                                                
+                                            <label >Version</label>
+                                        </div>
+
+                                        <div class="col-1">
+                                            <label >Acciones</label>
+                                            <!--                                        <div class="row" style="text-align: center;">
+                                                                                        <div class="col-4 btnAction btnEditar"><img src="img/lapiz.svg" alt=""/>Editar</div>
+                                                                                        <div class="col-4 btnAction btnEliminar">  <img src="img/bote-de-basura.svg" alt=""/>Eliminar</div>
+                                                                                        <div class="col-4 btnAction btnVer"> Ver <img src="img/cheuron.svg" alt=""/></div>
+                                                                                    </div>-->
+
+
+
+
+                                        </div>
+                                    </div>
+                                </div>                     
+                                <div id="list_autos_agg" data-pagina="0" >
+
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>                     
+
+                </div>
+
+            </div>
+        </div>
+        <div class="modal fade" id="aggParteExis" role="dialog">
+            <div class="modal-dialog col-10" >
+                <div class="modal-content" >
+                    <div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button> <h4 class="modal-title">Agregar vehiculo.</h4> </div>
+                    <div class="card-body"  >  
+                        <span>Seleccione el repuesto para agregar.</span>
+                        <div class="row">
+                            <div class="col-md-12 align-content-center">
+                                
+                                <!--<a><b>Resultados:</b><span id="resultados_veh">(0)</span></a>-->
+                                <div  class='list-group-item list-group-item-action align-items-start'>
+                                    <div class="row titulo_tabla">
+                                         <div class="col-2">                                                                                                                
+                                                <label >Codigo</label>
+                                            </div>
+                                            <div class="col-1">
+                                                <label >Foto</label>
+                                            </div>
+                                            <div class="col-4">                                                                                                                
+                                                <label >Nombre</label>
+                                            </div>
+
+                                            <div class="col-2">                                                                                                                
+                                                <label >Precio</label>
+                                            </div>
+                                            <div class="col-3">
+                                                <label >Acciones</label>
+                                                <!--                                        <div class="row" style="text-align: center;">
+                                                                                            <div class="col-4 btnAction btnEditar"><img src="img/lapiz.svg" alt=""/>Editar</div>
+                                                                                            <div class="col-4 btnAction btnEliminar">  <img src="img/bote-de-basura.svg" alt=""/>Eliminar</div>
+                                                                                            <div class="col-4 btnAction btnVer"> Ver <img src="img/cheuron.svg" alt=""/></div>
+                                                                                        </div>-->
+
+
+
+
+                                            </div>
+                                    </div>
+                                </div>                     
+                                <div id="listRepSinEsquema" data-pagina="0" >
+
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>                     
+
+                </div>
+
+            </div>
+        </div>
+        <div class="modal fade" id="selectMetod" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Agregar al esquema.
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex justify-content-around bd-highlight" >
+                            <div class="p-3 btnMetod" onclick="addNew();">Agregar nuevo repuesto.</div>
+                            <div class="p-3 btnMetod" onclick="addExist();">Agregar a repuesto existente.</div>
+                            
+                            
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="confirm-delete-part" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Eliminar
+                    </div>
+                    <div class="modal-body">
+                        Esta seguro que desea eliminar el repuesto <p id="marName"></p>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-danger btn-ok" id="btn_eliminar_part" onclick="ok_eliminar_part(this);">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="plugin/jcanvas.js" type="text/javascript"></script>
+        <script src="js/canvas.js" type="text/javascript"></script>
+        <script src="js/Repuesto/RepListPartes.js" type="text/javascript"></script>
+        <script src="js/Repuesto/RepEsquema.js" type="text/javascript"></script>
+        <script src="js/Repuesto/RepParteCreate.js" type="text/javascript"></script>
+        <script src="js/Repuesto/RepPerfil.js" type="text/javascript"></script>
+
+        
+        
+    </body>
+</html>

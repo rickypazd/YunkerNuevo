@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html lang="es">
+    <head>
+        <title>Servisis</title>
+        <meta charset="utf-8">
+
+
+        <meta name="keywords" content="responsive html5 template, e-commerce, shop, bootstrap 3.0, css, jquery, flat, modern" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <!--<link href="plugin/bootstrap-4.1.1/css/bootstrap-grid.min.css" rel="stylesheet" type="text/css"/>-->
+        <link href="css/styles.css" rel="stylesheet" type="text/css"/>
+
+        <script src="js/libs/jquery-1.11.1.min.js" type="text/javascript"></script>
+        <script src="js/libs/jquery-ui-1.10.4.custom.min.js"></script>
+        <script src="js/plugins/bootstrap.min.js"></script>
+
+        <script src="js/MyFunction/load.js" type="text/javascript"></script>
+        <script src="js/header.js" type="text/javascript"></script>
+        <script src="js/carrito.js" type="text/javascript"></script>
+        
+    </head>
+    <body>
+        <div id="header"></div>
+
+        <section class="shopping-cart">
+            <div class="container">
+                <div class="row">
+
+                    <!--Items List-->
+                    <div class="col-lg-9 col-md-9">
+                        <h2 class="title">Carrito de compras</h2>
+                        <table class="items-list">
+                            <tbody id="itensCar"><tr>
+                                    <th>&nbsp;</th>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Cantidad</th>
+                                    <th>Total</th>
+                                </tr>
+                                <!--Item-->
+                               
+                                <!--Item-->
+                                
+                            </tbody></table>
+                    </div>
+
+                    <!--Sidebar-->
+                    <div class="col-lg-3 col-md-3">
+                        <h3>Totales</h3>
+                        <form class="cart-sidebar" method="post">
+                            <div class="cart-totals">
+                                <table>
+                                    <tbody><tr>
+                                            <td>Subtotal</td>
+                                            <td class="total align-r " id="SubTotalCar">00,00 Bs.</td>
+                                        </tr>
+                                        <tr class="devider">
+                                            <td>Extras</td>
+                                            <td class="align-r">0 Bs.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Monto total</td>
+                                            <td class="total align-r" id="totalCar">00,00 Bs.</td>
+                                        </tr>
+                                    </tbody></table>
+                                <input type="submit" class="btn btn-primary btn-sm btn-block" name="update-cart" value="Update shopping cart">
+                                <input type="submit" class="btn btn-success btn-block" name="to-checkout" value="Proceed to checkout">
+                            </div>
+                            
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    </body>
+</html>

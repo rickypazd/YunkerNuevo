@@ -1,0 +1,87 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Servisis</title>
+        <meta name="description" content="Servisis">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap-grid.min.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+        <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+
+        <script src="plugin/jquery/jquery.min.js" type="text/javascript"></script>
+        <script src="js/eventos/navBar.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/popper.min.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/bootstrap.min.js" type="text/javascript"></script>
+
+        <script src="plugin/md5/md5.min.js" type="text/javascript"></script>
+        <script src="assets/js/matchHeigh.js" type="text/javascript"></script>
+        <script src="assets/js/main.js"></script>
+        <script src="js/eventos/verifySession.js" type="text/javascript"></script>
+        <script src="js/Usr/UsrCreate.js" type="text/javascript"></script>
+        <script src="js/eventos/load.js" type="text/javascript"></script>
+
+    </head>
+
+    <body data-permisourl="crear_usuario">
+        <div id="right-panel" class="right-panel">
+
+            <div class="content">
+                <!-- Animated -->
+                <button class="btn btn-outline-danger" onclick="window.history.back();">Volver</button>
+                <div class="animated fadeIn">
+                   <h1>Crear usuario.</h1>
+                    
+                    <div class="container">
+                        <form class="col-md-6">
+                            <div class="form-group">
+                                <label for="cu_nombre">Nombre:</label>
+                                <input type="text" class="form-control" id="cu_nombre" placeholder="Escriba su Nombre...">
+                            </div>
+                            <div class="form-group">
+                                <label for="cu_ap_pa">Apellido Paterno:</label>
+                                <input type="text" class="form-control" id="cu_ap_pa" placeholder="Escriba su Apellido Paterno">
+                            </div>
+                            <div class="form-group">
+                                <label for="cu_ap_ma">Apellido Materno:</label>
+                                <input type="text" class="form-control" id="cu_ap_ma" placeholder="Escriba su Apellido Materno">
+                            </div>
+                            <div class="form-group">
+                                <label for="cu_tipo">Tipo de Usuario:</label>
+                                <select class="form-control" id="cu_tipo">  
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cu_usuario">Usuario:</label>
+                                <input type="text" class="form-control" id="cu_usuario" placeholder="Escriba su Usuario">
+                            </div>
+                            <div class="form-group">
+                                <label for="cu_contrasenha">Contraseña:</label>
+                                <input type="password" class="form-control" id="cu_contrasenha" placeholder="........">
+                            </div>
+                            <div class="form-group">
+                                <label for="cu_repcontrasenha">Rep.Contraseña:</label>
+                                <input type="password" class="form-control" id="cu_repcontrasenha" placeholder="........">
+                            </div>
+                        </form>
+
+                        <div class="row d-flex justify-content-center">
+                            <button type="button" class="btn btn-primary" onclick="ok_crear();" >
+                                CREAR
+                            </button>
+                        </div>
+                    </div>
+                </div>           
+                <!-- Footer -->
+
+                <!-- /.site-footer -->
+            </div>
+
+    </body>
+</html>

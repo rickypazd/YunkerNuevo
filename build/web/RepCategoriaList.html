@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Servisis</title>
+        <meta name="description" content="Servisis">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap-grid.min.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+        <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
+
+        <script src="plugin/jquery/jquery.min.js" type="text/javascript"></script>
+        <script src="js/eventos/navBar.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/popper.min.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="assets/js/matchHeigh.js" type="text/javascript"></script>
+        <script src="assets/js/main.js"></script>
+        <script src="plugin/CryptoJS v3.1.2/rollups/aes.js" type="text/javascript"></script>
+        <script src="js/eventos/verifySession.js" type="text/javascript"></script>
+
+        <script src="js/Repuesto/RepCategoriaList.js" type="text/javascript"></script>
+        <script src="js/eventos/load.js" type="text/javascript"></script>
+    </head>
+    <body>    
+
+        <!-- /#left-panel -->
+        <!-- Right Panel -->
+        <div id="right-panel" class="right-panel">
+            <!-- Header-->
+
+            <div class="content">
+                <header class="container">
+                    <div class="align-content-center">
+                        <div class="page-header text-center">
+                            <h1>Categorias de repuestos</h1>
+                        </div>
+                    </div>
+                </header>
+                <br> 
+                <div class="container form-group">              
+                    <div class="card">
+                        <div class="card-header" style="background-color: white" >
+
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_agregar_categoria">
+                                Agregar Categoria
+                            </button>
+                        </div>
+                        <!--                        <object type="image/svg+xml" data="img/lapiz.svg" class="logo">
+                                                
+                                                </object>-->
+                        <div class="card-body" >  
+                            <div id="accordion">
+
+                            </div>    
+                            <br>
+
+                        </div>                                                                    
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- Footer -->
+
+            <!-- /.site-footer -->
+        </div>
+
+        <div class="modal fade" id="modal_agregar_categoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Agregar Categoria</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="nombre_categoria" class="label-titulo">Nombre</label>
+                            <input class="form-control" type="text" placeholder="Nombre de la categoria." id="nombre_categoria" >
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" onclick="agregar_categoria();">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modal_agregar_sub_categoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Agregar Sub-Categoria</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="nombre_sub_categoria" class="label-titulo">Nombre</label>
+                            <input class="form-control" type="text" placeholder="Nombre de la Sub-Categoria." id="nombre_sub_categoria" >
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" id="btn_agregar_sub_categoria" onclick="agregar_sub_categoria();">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Eliminar
+                    </div>
+                    <div class="modal-body">
+                        Esta seguro que desea eliminar la categoria <p id="marName"></p>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-danger btn-ok" id="btn_eliminar" onclick="ok_eliminar(this);">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="confirm-deleteSub" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Eliminar
+                    </div>
+                    <div class="modal-body">
+                        Esta seguro que desea eliminar la Sub-Categoria <p id="marNameSub"></p>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-danger btn-ok" id="btn_eliminarSub" onclick="ok_eliminarSub(this);">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

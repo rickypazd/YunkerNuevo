@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Traductor</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style type="text/css">
+            body{
+                border: 0;
+                margin: 0;
+                text-align: center;
+                background: #EEE;
+            }
+            .contInput{
+
+
+                width: 100%;
+                height: 50px;
+            }
+            #tablaInput{
+
+                margin: 0;
+                padding: 0;
+                width: 350px;
+                height: 100%;
+                border-radius: 10px;
+                font-size: 20px;
+                border: 1px solid;
+            }
+            .btnCargar{
+                border-radius: 100%;
+                margin: 0;
+                padding: 0;
+                height: 70%;
+
+            }
+            table{
+                margin-top: 8px;
+                width: 100%;
+                border-spacing: 0;
+                color: #666;
+
+            }
+            th{
+                margin: 0;
+                border: 1px solid #aaa;
+            }
+            td{
+                border: 1px solid #aaa;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>TRADUCTOR</h1>
+        <hr>
+
+        <div class="contInput">
+            <input type="text" id="tablaInput" placeholder="Nombre de tabla" >
+            <button class="btnCargar" onclick="cargarTabla();">CARGAR</button>
+        </div>
+
+
+
+        <div class="table">
+
+            <table>
+                <thead id="tcabe">
+
+                </thead>
+                <tbody id="tbo">
+
+                </tbody>
+            </table>
+        </div>
+
+
+        <script src="plugin/jquery/jquery.min.js" type="text/javascript"></script>
+        <script src="plugin/chromeSuperAjax.js" type="text/javascript"></script>
+        <script type="text/javascript">
+                var ElmImputNombreTabla = document.getElementById("tablaInput");
+                var ElmTableHead = document.getElementById("tcabe");
+                var ElmTableBody = document.getElementById("tbo");
+                function cargarTabla() {
+                    traducir();
+                    return;
+                    if (ElmImputNombreTabla.value.length <= 0) {
+                        ElmImputNombreTabla.style.background = "#ff0";
+                        return;
+                    }
+                    ElmImputNombreTabla.style.background = "#fff";
+                    $.post("admin/adminController", {TokenAcceso: "servi12sis3", evento: "getTableTraductor", nombre_tabla: ElmImputNombreTabla.value}, function (resp) {
+
+                        if (resp != null) {
+                            var jsonResp = JSON.parse(resp);
+                            if (jsonResp.resp) {
+                                var arrResp = JSON.parse(jsonResp.resp);
+                                var keys = [];
+                                ElmTableHead.innerHTML = "";
+                                ElmTableBody.innerHTML = "";
+
+                                for (var i = 0; i < arrResp.length; i++) {
+
+                                    var ElmTr = document.createElement("tr");
+                                    //INICIA KEYS
+                                    var arrKeys = Object.keys(arrResp[i]);
+                                    for (var j = 0; j < arrKeys.length; j++) {
+                                        var keyExist = false;
+                                        if (keys.length > 0) {
+                                            for (var k = 0; k < keys.length; k++) {
+                                                if (keys[k] == arrKeys[j]) {
+                                                    keyExist = true;
+                                                }
+                                            }
+                                        }
+                                        if (!keyExist) {
+                                            var th_i = document.createElement("th");
+                                            var th_txt_i = document.createTextNode(arrKeys[j]);
+                                            th_i.appendChild(th_txt_i);
+                                            ElmTableHead.appendChild(th_i);
+
+                                            keys.push(arrKeys[j]);
+                                        }
+
+                                        var data1 = document.createElement("td");
+                                        data1.innerHTML = arrResp[i][arrKeys[j]];
+                                        ElmTr.appendChild(data1);
+                                    }
+                                    //TERMINA KEYS
+
+                                    ElmTableBody.appendChild(ElmTr);
+                                }
+                            }
+                        }
+                    });
+                }
+                function traducir() {
+                    if (ElmImputNombreTabla.value.length <= 0) {
+                        ElmImputNombreTabla.style.background = "#ff0";
+                        return;
+                    }
+                    ElmImputNombreTabla.style.background = "#fff";
+                    $.ajax({
+                        url: 'http://www.traductoringlesespanol.mobi/api.php',
+                        type: 'POST',
+                        crossOrigin: true,
+                        data: {q: "hellow", langFrom: "en", langTo: "es"},
+                        dataType: 'json',
+                        succes: function (resp) {
+                            alert(resp);
+                        },
+                        error: function (e) {
+                            alert(e.error);
+                        }
+                    });
+
+
+
+                }
+
+        </script>
+    </body>
+</html>

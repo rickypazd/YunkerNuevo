@@ -1,0 +1,202 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Servisis</title>
+        <meta name="description" content="Servisis">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap-grid.min.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+        <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
+        <script src="plugin/jquery/jquery.min.js" type="text/javascript"></script>
+        <script src="js/eventos/navBar.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/popper.min.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/bootstrap.min.js" type="text/javascript"></script>
+
+
+        <script src="assets/js/matchHeigh.js" type="text/javascript"></script>
+        <script src="assets/js/main.js"></script>
+        <script src="js/eventos/verifySession.js" type="text/javascript"></script>
+
+
+        <script src="js/Vehiculo/VehModeloPerfil.js" type="text/javascript"></script>
+        <script src="js/eventos/load.js" type="text/javascript"></script>
+
+    </head>
+
+    <body>
+        <div id="right-panel" class="right-panel">
+
+            <div class="content">
+                <!-- Animated -->
+                <button class="btn btn-outline-danger" onclick="window.history.back();">Volver</button>
+                <div class="animated fadeIn">
+                    <h1>Perfil de modelo</h1>
+
+                    <div class="container">  
+
+                        <div class="d-flex justify-content-center">
+                            <div class="col-4 " style="text-align: center;">
+                                <img src="img/Sin-foto1.jpg" class="img-fluid rounded-circle" id="foto_perfil" alt=""/>
+                            </div>
+                        </div>
+                         <div class="text-center">
+                            <h2 id="nombre_perfil">Modelo</h2>
+                        </div>
+                        </br>
+                        <ul class="list-unstyled list-group" style="margin-top: 8px;">
+                            <li class="list-group-item">
+                                <span>Acciones: </span>
+                                <a href="#" id="editarPerfil" class="btn btn-outline-primary" >Editar</a>
+                            </li>
+
+
+                        </ul>
+
+                       
+                        </br>
+                        <div class="card" id="marcaCard" onclick="verMarca();">
+
+
+                            <h4 id="marca">Marca:</h4>
+                            <div class="row">
+
+                                <div class="col-2">
+                                  
+                                </div>
+                                <div class="col-3">
+                                    <img src="img/Sin-foto1.jpg"  id="img_marca" alt=""/>
+                                </div>
+                                <div class="col-7 ">
+                                    <table style="height: 100px;">
+                                        <tbody>
+                                            <tr>
+
+                                                <td class="align-middle" id="dtMarca">Marca</td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        </br>
+                        <h3 id="nombre_perfil">Versiones del modelo:</h3>
+                        <div class="card-body">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="agregar_modelo();">Agregar version.</button>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 align-content-center">
+
+
+                                <div  class='list-group-item list-group-item-action align-items-start'>
+                                    <div class="row">
+
+                                        <div class="col-8">                                                                                                                
+                                            <label >Nombre</label>
+                                        </div>
+                                        <div class="col-4">
+                                            <label >Acciones</label>
+                                            <!--                                        <div class="row" style="text-align: center;">
+                                                                                        <div class="col-4 btnAction btnEditar"><img src="img/lapiz.svg" alt=""/>Editar</div>
+                                                                                        <div class="col-4 btnAction btnEliminar">  <img src="img/bote-de-basura.svg" alt=""/>Eliminar</div>
+                                                                                        <div class="col-4 btnAction btnVer"> Ver <img src="img/cheuron.svg" alt=""/></div>
+                                                                                    </div>-->
+
+
+
+
+                                        </div>
+                                    </div>
+                                </div>                     
+                                <div id="list_marcas" data-pagina="0" >
+
+
+                                </div>
+                                <div class="col-md-12" style="text-align: center; margin-top: 0px;">
+
+                                    <img id="img-carga" src="img/cargando.gif" alt="" class="img-responsive center-block"/>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>           
+                <!-- Footer -->
+
+                <!-- /.site-footer -->
+            </div>
+            <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            Eliminar
+                        </div>
+                        <div class="modal-body">
+                            Esta seguro que desea eliminar la version <p id="marName"></p>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-danger btn-ok" id="btn_eliminar" onclick="ok_eliminar(this);">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="agg_version" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            Crear version
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="text_version_nombre" class="label-titulo" >Nombre</label>
+                                    <input type="text" name="nombre" class="form-control color-input" id="text_version_nombre" placeholder="Nombre de la version...">
+                                </div>                         
+                            </div>  
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-outline-primary" id="btn_eliminar" onclick="ok_agregar(this);">Crear</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="modal fade" id="editar_version" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            Editar version
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="text_version_nombre_edit" class="label-titulo" >Nombre</label>
+                                    <input type="text" name="nombre" class="form-control color-input" id="text_version_nombre_edit" placeholder="Nombre de la version...">
+                                </div>                         
+                            </div>  
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-outline-primary" id="btn_eliminar" onclick="ok_editar(this);">Editar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </body>
+</html>
