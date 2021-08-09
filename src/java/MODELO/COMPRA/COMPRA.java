@@ -29,8 +29,8 @@ public class COMPRA {
 
     public int Insertar(String codigo, Date fecha, String nombreProveedor, double total, int id_admin) throws SQLException {
         String consulta = "INSERT INTO public.compra(\n"
-                + "	codigo, fecha, nombre_proveedor, total, id_administrador)\n"
-                + "	VALUES (?, ?, ?, ?, ?);";
+                + "	codigo, fecha, nombre_proveedor, total, id_administrador,fecha_on)\n"
+                + "	VALUES (?, ?, ?, ?, ?, now());";
         PreparedStatement ps = con.statamet(consulta);
 
         ps.setString(1, codigo);
@@ -38,7 +38,6 @@ public class COMPRA {
         ps.setString(3, nombreProveedor);
         ps.setDouble(4, total);
         ps.setInt(5, id_admin);
-        
 
         ps.execute();
         consulta = "select last_value from " + TBL + "_id_seq ";
@@ -64,20 +63,25 @@ public class COMPRA {
         ps.close();
         return row;
     }
-    public String getPaginationJSON(int pag, int limit, String busqueda) throws SQLException, JSONException {
+
+    public String getPaginationJSON(int pag, int limit, String busqueda, String fecha, String fechaFin) throws SQLException, JSONException {
         String consultaCount = "SELECT count(ve.id)"
                 + "    FROM compra ve\n"
                 + "    WHERE(\n"
-                + "          UPPER(ve.codigo) LIKE UPPER('%"+busqueda+"%') OR \n"
-                + "          UPPER(ve.nombre_proveedor) LIKE UPPER('%"+busqueda+"%')\n"
-                + "         )\n";
+                + "          UPPER(ve.codigo) LIKE UPPER('%" + busqueda + "%') OR \n"
+                + "          UPPER(ve.nombre_proveedor) LIKE UPPER('%" + busqueda + "%')\n"
+                + "         )\n"
+                + "     AND ve.fecha >= '" + fecha + "' \n"
+                + "     AND ve.fecha <= '" + fechaFin + "' \n";
 
         String consultaArray = "SELECT ve.id, ve.codigo, DATE(ve.fecha) AS fecha , ve.nombre_proveedor, ve.total, ve.id_administrador, ve.estado\n"
                 + "    FROM compra ve\n"
                 + "    WHERE(\n"
-                + "          UPPER(ve.codigo) LIKE UPPER('%"+busqueda+"%') OR \n"
-                + "          UPPER(ve.nombre_proveedor) LIKE UPPER('%"+busqueda+"%')\n"
+                + "          UPPER(ve.codigo) LIKE UPPER('%" + busqueda + "%') OR \n"
+                + "          UPPER(ve.nombre_proveedor) LIKE UPPER('%" + busqueda + "%')\n"
                 + "         )\n"
+                + "     AND ve.fecha >= '" + fecha + "' \n"
+                + "     AND ve.fecha <= '" + fechaFin + "' \n"
                 + "    ORDER BY ve.fecha DESC \n"
                 + "limit " + limit + " offset " + (pag * limit);
         String consulta = "select row_to_json(res) as json\n"
@@ -104,6 +108,34 @@ public class COMPRA {
 
     }
 
-    
+    public String getById(int id) throws SQLException, JSONException {
+
+        String consulta = "select row_to_json(res) as json\n"
+                + "from(\n"
+                + "select ve.*, (\n"
+                + "    select array_to_json(array_agg(ved.*))\n"
+                + "    from com_detalle ved\n"
+                + "    where ved.id_compra = ve.id\n"
+                + ") as detalle\n"
+                + ", (\n"
+                + "    select array_to_json(array_agg(usr.*))\n"
+                + "    from usuario usr\n"
+                + "    where usr.id = ve.id_administrador\n"
+                + ") as administrador\n"
+                + "from compra ve\n"
+                + "where ve.id = " + id + "\n"
+                + "	) as res";
+        PreparedStatement ps = con.statamet(consulta);
+        ResultSet rs = ps.executeQuery();
+        String resp = "error";
+        if (rs.next()) {
+            resp = rs.getString("json");
+
+        }
+        ps.close();
+        rs.close();
+        return resp;
+
+    }
 
 }

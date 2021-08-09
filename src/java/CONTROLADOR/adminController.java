@@ -19,6 +19,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import java.nio.file.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -100,17 +102,30 @@ public class adminController extends HttpServlet {
                 case "getAll_pagination_usuario":
                     html = getAll_pagination_usuario(request, con);
                     break;
+                case "getAll_pagination_usuarioDescuento":
+                    html = getAll_pagination_usuarioDescuento(request, con);
+                    break;
+                case "getDescuentoActual":
+                    html = getDescuentoActual(request, con);
+                    break;
                 case "getCant_usuarios":
                     html = getCant_usuarios(request, con);
                     break;
+          
                 case "getById_usuario":
                     html = getById_usuario(request, con);
+                    break;
+                case "registrarDescuento":
+                    html = registrarDescuento(request, con);
+                    break;
+                case "getDescuento":
+                    html = getDescuento(request, con);
                     break;
 //</editor-fold>
                 case "getTableTraductor":
                     html = getTableTraductor(request, con);
                     break;
-                    
+
             }
         } else {
             RESPUESTA resp = new RESPUESTA(0, "Servisis: Token de acceso erroneo.", "Token denegado", "{}");
@@ -257,8 +272,8 @@ public class adminController extends HttpServlet {
 
             if (file != null) {
                 names = file.getSubmittedFileName();
-                String ruta = request.getSession().getServletContext().getRealPath("/");
-                name = EVENTOS.guardar_file(file, ruta, URL.ruta_foto_prefil + "/" + id_usr + "/", names);
+//                String ruta = request.getSession().getServletContext().getRealPath("/");
+                name = EVENTOS.guardar_file(file, "", URL.ruta_foto_prefil + "/" + id_usr + "/", names);
             }
             USUARIO usr = new USUARIO(con);
             usr.setID(id_usr);
@@ -302,6 +317,45 @@ public class adminController extends HttpServlet {
             return resp.toString();
         }
     }
+    private String getAll_pagination_usuarioDescuento(HttpServletRequest request, Conexion con) {
+        String nameAlert = "usuario";
+        try {
+            int pagina = pInt(request, "pagina");
+            int cantidad = pInt(request, "cantidad");
+            String busqueda = pString(request, "busqueda");
+            USUARIO usuario = new USUARIO(con);
+            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", usuario.getPaginationDescueto(pagina, cantidad, busqueda).toString());
+            return resp.toString();
+        } catch (SQLException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al obtener " + nameAlert + ".", "{}");
+            return resp.toString();
+        } catch (JSONException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        }
+    }
+    private String getDescuentoActual(HttpServletRequest request, Conexion con) {
+        String nameAlert = "usuario";
+        try {
+            USUARIO usuario = new USUARIO(con);
+            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", usuario.getDescuentoActual()+"");
+            return resp.toString();
+        } catch (SQLException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al obtener " + nameAlert + ".", "{}");
+            return resp.toString();
+        } catch (JSONException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        }
+    }
 
     private String getCant_usuarios(HttpServletRequest request, Conexion con) {
         String nameAlert = "usuario";
@@ -322,7 +376,7 @@ public class adminController extends HttpServlet {
             return resp.toString();
         }
     }
-
+ 
     private String getById_usuario(HttpServletRequest request, Conexion con) {
         String nameAlert = "usuario";
         try {
@@ -344,12 +398,11 @@ public class adminController extends HttpServlet {
     }
 
 //</editor-fold>
-
     private String getTableTraductor(HttpServletRequest request, Conexion con) {
         String nombre_tabla = request.getParameter("nombre_tabla");
-          String nameAlert = nombre_tabla;
+        String nameAlert = nombre_tabla;
         try {
-            
+
             JSONObject obj = new JSONObject();
             obj.put("nombre_tabla", nombre_tabla);
             RESPUESTA resp = new RESPUESTA(1, "", "Exito.", CONSULTA.selectAll(obj));
@@ -361,4 +414,65 @@ public class adminController extends HttpServlet {
             return resp.toString();
         }
     }
+
+    private String registrarDescuento(HttpServletRequest request, Conexion con) {
+        try {
+            int descuento = Integer.parseInt(request.getParameter("descuento"));
+            int usr_log = Integer.parseInt(request.getParameter("usr_log"));
+
+            String consulta = "INSERT INTO public.descuento(\n"
+                    + "	cantidad, fecha, id_admin)\n"
+                    + "	VALUES (?,now(),?);";
+            PreparedStatement ps = con.statamet(consulta);
+
+            ps.setInt(1, descuento);
+            ps.setInt(2, usr_log);
+            ps.execute();
+            consulta = "select last_value from descuento_id_seq ";
+            ps = con.statamet(consulta);
+            ResultSet rs = ps.executeQuery();
+            int id = 0;
+            if (rs.next()) {
+                id = rs.getInt("last_value");
+            }
+            rs.close();
+            ps.close();
+
+            RESPUESTA resp = new RESPUESTA(1, "", "Descuento registrado con exito.", "");
+            return resp.toString();
+        } catch (SQLException ex) {
+            con.rollback();
+            Logger.getLogger(loginController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al registrar descuento.", "{}");
+            return resp.toString();
+        }
+    }
+
+    private String getDescuento(HttpServletRequest request, Conexion con) {
+        try {
+
+            String consulta = "select cantidad, fecha\n"
+                    + "from descuento\n"
+                    + "order by fecha desc\n"
+                    + "limit 1";
+            PreparedStatement ps = con.statamet(consulta);
+            ResultSet rs = ps.executeQuery();
+            int descuento = 0;
+            if (rs.next()) {
+                descuento = rs.getInt("cantidad");
+            }
+            rs.close();
+            ps.close();
+
+            RESPUESTA resp = new RESPUESTA(1, "", "Descuento exito.", descuento + "");
+            return resp.toString();
+        } catch (SQLException ex) {
+            con.rollback();
+            Logger.getLogger(loginController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al obtener descuento.", "{}");
+            return resp.toString();
+        }
+    }
+
+
 }

@@ -13,7 +13,7 @@ and open the template in the editor.
         <meta name="author" content="8Guild" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <!--<link rel="icon" href="favicon.ico" type="image/x-icon">-->
-
+        <link rel="icon" href="./img/logofullpart.png">
         <!--<link href="masterslider/style/masterslider.css" rel="stylesheet" media="screen">-->
         <link href="css/styles.css" rel="stylesheet" media="screen">
         <!--<link class="color-scheme" href="css/colors/color-default.css" rel="stylesheet" media="screen">-->
@@ -40,57 +40,52 @@ and open the template in the editor.
     <body>
         <header data-offset-top="500" data-stuck="600" id="header"><!--data-offset-top is when header converts to small variant and data-stuck when it becomes visible. Values in px represent position of scroll from top. Make sure there is at least 100px between those two values for smooth animation-->
 
-            <!--Search Form-->
 
+            <div class="barra"> 
+                <div class="barra_menu">
+                    <div class="bm_top">
+                        <div class="bm_boder">
+                            <a class="logo" href="index.html"><img src="img/logofullpart.png" alt="Servisis" style="max-height: 45px;"/></a>
+                            <ul id="mainMenu" class="main oculto">
+                                <li class="has-submenu"><a href="index.html">Inicio</a><!--Class "has-submenu" for proper highlighting and dropdown-->
 
-            <!--Split Background-->
-            <div class="left-bg"></div>
-            <div class="right-bg"></div>
+                                </li>
+                                <li class="has-submenu"><a href="tienda.html">Tienda</a>
 
-            <div class="container" style="">
-                <a class="logo" href="index.html"><img src="img/logofullpart.png" alt="Servisis" style="max-height: 45px;"/></a>
+                                </li>
 
-                <!--Language / Currency Switchers--> 
+                                <li class="hide-sm"><a href="buscar.html">Buscar</a></li>
+                                <li class="has-submenu"><a href="carrito.html">Carrito</a>
 
+                                </li>
 
-                <!--Mobile Menu Toggle-->
-                <div class="menu-toggle"><i class="fa fa-list"></i></div>
-                <div class="mobile-border"><span></span></div>
-
-                <!--Main Menu-->
-                <nav class="menu">
-                    <ul class="main">
-                        <li class="has-submenu"><a href="index.html">Inicio<i class="fa fa-chevron-down"></i></a><!--Class "has-submenu" for proper highlighting and dropdown-->
-                            
-                        </li>
-                        <li class="has-submenu"><a href="tienda.html">Tienda<i class="fa fa-chevron-down"></i></a>
-                           
-                        </li>
-                        <li class="has-submenu"><a href="carrito.html">Carrito<i class="fa fa-chevron-down"></i></a>
-                        
-                        </li>
-                    
-                        <li class="hide-sm"><a href="favoritos.html">Favoritos</a></li>
-                    </ul>
-                    <ul class="catalog">
-                        <li><a href="marcas.html">Marcas</a></li>
-                        <li><a href="categorias.html">Categorias</a></li>
-                        <li><a href="nosotros.html">Nosotros</a></li>
-                        
-                    </ul>
-                </nav>
-
-                <!--Toolbar-->
-                <div class="toolbar group">
-                    <!--<button class="search-btn btn-outlined-invert"><i class="icon-magnifier"></i></button>-->
-                    <div class="middle-btns">
-                        <a class="btn-outlined-invert" href="favoritos.html"><i class="icon-heart"></i> <span>Favoritos</span></a>
-                        <a class="login-btn btn-outlined-invert" href="#" data-toggle="modal" data-target="#loginModal"><i class="icon-profile"></i> <span>Login</span></a>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="cart-btn">
-                        <a class="btn btn-outlined-invert" href="carrito.html"><i class="icon-shopping-cart-content"></i><span id="cantidadCarrito">0</span></a>
+                    <div class="bm_bot">
+                        <div class="menu-toggle" onclick="showMenu();"><i class="fa fa-list"></i></div>
 
-                        <!--Cart Dropdown-->
+                        <div class="buscarResp" id="contenBuscarMouse">
+                            <input type="text" onkeyup="buscar(this);" class="form-control inpBuscar" aria-label="Large" aria-describedby="inputGroup-sizing-sm" placeholder="BUSCAR..."/>
+
+
+                            <div class="buscarRespCont" id="respConteBusqueda" style="max-height: 90vh; overflow: auto;">
+
+                               
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="barra_carrito ">
+                    <div class="conten_carrito">
+                        <a class="btn btn-outlined-invert" href="carrito.html">
+                            <i class="icon-shopping-cart-content"></i>
+                            <span id="cantidadCarrito">0</span>
+                        </a>
                         <div class="cart-dropdown">
                             <span></span><!--Small rectangle to overlap Cart button-->
                             <div class="body">
@@ -114,10 +109,11 @@ and open the template in the editor.
                             </div>
                         </div><!--Cart Dropdown Close-->
                     </div>
-                </div><!--Toolbar Close-->
+
+                </div>
             </div>
             <div class="modal fade" id="ModalAddCart" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLongTitle">Agregar al carrito.</h5>
@@ -127,28 +123,28 @@ and open the template in the editor.
                         </div>
                         <div class="modal-body">
                             <section class="shopping-cart">
-                               
-                                    <div class="row">
 
-                                        <!--Items List-->
-                                        <div class="col-lg-12 col-md-12">
+                                <div class="row">
 
-                                            <table class="items-list">
-                                                <thead>
-                                                     <th>&nbsp;</th>
-                                                        <th>Nombre</th>
-                                                        <th>Precio</th>
-                                                        <th>Cantidad</th>
-                                                        <th>Total</th>
-                                                </thead>
-                                                <tbody id="ModalAddCartBody">
-                                                    <!--Item-->
+                                    <!--Items List-->
+                                    <div class="col-lg-12 col-md-12">
 
-                                                    <!--Item-->
+                                        <table class="items-list" >
+                                            <thead>
+                                            <th>&nbsp;</th>
+                                            <th>Nombre</th>
+                                            <th>Precio</th>
+                                            <th>Cantidad</th>
+                                            <th>Total</th>
+                                            </thead>
+                                            <tbody id="ModalAddCartBody">
+                                                <!--Item-->
 
-                                                </tbody></table>
-                                        </div>
-                                    
+                                                <!--Item-->
+
+                                            </tbody></table>
+                                    </div>
+
                                 </div>
                             </section>
                         </div>

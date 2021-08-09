@@ -56,7 +56,7 @@ import org.json.JSONObject;
  * @author RICKY
  */
 @MultipartConfig
-@WebServlet(name = "autosController", urlPatterns = {"/autosController"})
+@WebServlet(name = "autosController", urlPatterns = {"/admin/autosController"})
 
 public class autosController extends HttpServlet {
 
@@ -427,9 +427,9 @@ public class autosController extends HttpServlet {
             String names = "";
             if (file != null) {
                 names = file.getSubmittedFileName();
-                String ruta = request.getSession().getServletContext().getRealPath("/");
+//                String ruta = request.getSession().getServletContext().getRealPath("/");
 
-                name = EVENTOS.guardar_file(file, ruta, URL.ruta_foto_rep_auto_marca + "/" + id + "/", names);
+                name = EVENTOS.guardar_file(file, "", URL.ruta_foto_rep_auto_marca + "/" + id + "/", names);
             }
             rep_auto_marca.setURL_FOTO(URL.ruta_foto_rep_auto_marca + "/" + id + "/" + name);
 
@@ -514,9 +514,9 @@ public class autosController extends HttpServlet {
             String names = "";
             if (file != null) {
                 names = file.getSubmittedFileName();
-                String ruta = request.getSession().getServletContext().getRealPath("/");
+//                String ruta = request.getSession().getServletContext().getRealPath("/");
 
-                name = EVENTOS.guardar_file(file, ruta, URL.ruta_foto_rep_auto_marca + "/" + id + "/", names);
+                name = EVENTOS.guardar_file(file, "", URL.ruta_foto_rep_auto_marca + "/" + id + "/", names);
             }
             REP_AUTO_MARCA rep_auto_marca = new REP_AUTO_MARCA(con);
             rep_auto_marca.setURL_FOTO(URL.ruta_foto_rep_auto_marca + "/" + id + "/" + name);
@@ -619,8 +619,8 @@ public class autosController extends HttpServlet {
             String names = "";
             if (file != null) {
                 names = file.getSubmittedFileName();
-                String ruta = request.getSession().getServletContext().getRealPath("/");
-                name = EVENTOS.guardar_file(file, ruta, URL.ruta_foto_rep_auto_modelo + "/" + id + "/", names);
+//                String ruta = request.getSession().getServletContext().getRealPath("/");
+                name = EVENTOS.guardar_file(file, "", URL.ruta_foto_rep_auto_modelo + "/" + id + "/", names);
             }
             rep_auto_modelo.setURL_FOTO(URL.ruta_foto_rep_auto_modelo + "/" + id + "/" + name);
             rep_auto_modelo.subir_foto_perfil();
@@ -704,8 +704,8 @@ public class autosController extends HttpServlet {
             String names = "";
             if (file != null) {
                 names = file.getSubmittedFileName();
-                String ruta = request.getSession().getServletContext().getRealPath("/");
-                name = EVENTOS.guardar_file(file, ruta, URL.ruta_foto_rep_auto_modelo + "/" + id + "/", names);
+//                String ruta = request.getSession().getServletContext().getRealPath("/");
+                name = EVENTOS.guardar_file(file, "", URL.ruta_foto_rep_auto_modelo + "/" + id + "/", names);
             }
             REP_AUTO_MODELO rep_auto_modelo = new REP_AUTO_MODELO(con);
             rep_auto_modelo.setID(id);

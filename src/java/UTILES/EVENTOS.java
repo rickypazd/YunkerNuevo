@@ -1,6 +1,5 @@
 package UTILES;
 
-
 import Conexion.FtpClient;
 import java.io.*;
 import javax.servlet.http.Part;
@@ -11,17 +10,28 @@ import org.apache.commons.codec.binary.Base64;
  * @author RICKY
  */
 public class EVENTOS {
-                    
-    public static String guardar_file(Part file, String rootPath ,String url, String nombre) throws IOException {
-        String nombreFTP = FtpClient.subirArchibo(file, url, nombre);
-        int dbs = 2048;
-        File d = new File(rootPath+url);
-        if (!d.exists()) {
-            d.mkdirs();
-        }
-       
 
-        File f = new File(rootPath+"/"+url + "/" + nombreFTP);
+    public static String guardar_file(Part file, String rootPath, String url, String nombre) throws IOException {
+//        String nombreFTP = FtpClient.subirArchibo(file, url, nombre);
+        int dbs = 2048;
+        String arr[] = url.split("/");
+//        String[] names = ftp.listNames();
+//        for (String name : names) {
+//            System.out.println("Name = " + name);
+//        }
+
+        // ftp.enterLocalPassiveMode();
+        String urlTemp = URL.ruta_images;
+        for (int i = 0; i < arr.length; i++) {
+            urlTemp+="/"+arr[i];
+            File d = new File(rootPath + urlTemp);
+            if (!d.exists()) {
+                d.mkdirs();
+            }
+           
+        }
+
+        File f = new File(URL.ruta_images + "/" + url + "/" + nombre);
         InputStream in = null;
         OutputStream out = null;
 
@@ -46,8 +56,9 @@ public class EVENTOS {
                 }
             }
         }
-        return nombreFTP;
+        return nombre;
     }
+
     public static String guardar_fileb64(String file, String url, String nombre) throws IOException {
         int dbs = 2048;
         File d = new File(url);
@@ -78,12 +89,12 @@ public class EVENTOS {
         OutputStream out = null;
 
         try {
-            
+
             out = new BufferedOutputStream(new FileOutputStream(f), dbs);
             byte[] bufer = Base64.decodeBase64(file);
-            
-                out.write(bufer);
-            
+
+            out.write(bufer);
+
         } finally {
             if (out != null) {
                 try {
@@ -91,12 +102,12 @@ public class EVENTOS {
                 } catch (IOException ex) {
                     System.out.println(ex);
                 }
-            
+
             }
         }
         return nombre_code;
     }
-    
+
     public static String obtener_file(String url) throws IOException {
         File file = new File(url);
         String encodedBase64 = null;

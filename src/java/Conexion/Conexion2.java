@@ -1,5 +1,6 @@
 package Conexion;
 
+import UTILES.URL;
 import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -29,11 +30,12 @@ public class Conexion2 {
 
     public Conexion2() {
         this.driver = "org.postgresql.Driver";
-        this.host = "localhost";
+//        this.host = "204.93.165.196";
+        this.host =URL.ipdb;
         this.puerto = 5432;
-        this.baseDatos = "YunkerNew";
+        this.baseDatos = URL.db_name;
         this.usuarioBase = "postgres";
-        this.passwordBase = "rickypina123";
+        this.passwordBase = URL.db_pass;
         this.url = "jdbc:postgresql://" + host + ":" + puerto + "/" + baseDatos;
         conectado = false;
         open();

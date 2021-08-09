@@ -59,8 +59,8 @@ public class ALMACEN {
         ps.close();
         return row;
     }
-    
-     public String getPaginationJSON(int pag, int limit, String busqueda) throws SQLException, JSONException {
+
+    public String getPaginationJSON(int pag, int limit, String busqueda) throws SQLException, JSONException {
         String consultaCount = "select count(ra.id)"
                 + "from almacen ra\n"
                 + "where ra.estado = 0 \n"
@@ -74,6 +74,75 @@ public class ALMACEN {
                 + "	 upper(ra.direccion) like upper('%" + busqueda + "%') )\n"
                 + "	 order by(ra.nombre) asc\n"
                 + "limit " + limit + " offset " + (pag * limit);
+        String consulta = "select row_to_json(res) as json\n"
+                + "from(\n"
+                + "	select (\n"
+                + consultaCount
+                + "		), (\n"
+                + "		select array_to_json(array_agg(list.*))\n"
+                + "		from (\n"
+                + consultaArray
+                + "			) as list\n"
+                + "		) as arrayjson\n"
+                + "	) as res";
+        PreparedStatement ps = con.statamet(consulta);
+        ResultSet rs = ps.executeQuery();
+        String resp = "error";
+        if (rs.next()) {
+            resp = rs.getString("json");
+
+        }
+        ps.close();
+        rs.close();
+        return resp;
+
+    }
+
+    public String getCardexPaginationJSON(int pag, int limit, String busqueda) throws SQLException, JSONException {
+        String exprecion = "";
+
+        busqueda = busqueda.toLowerCase();
+        String[] palabras = busqueda.split(" ");
+        int index = 0;
+
+        for (int i = 0; i < palabras.length; i++) {
+            if (exprecion.length() > 0) {
+                exprecion += " AND ";
+            } else {
+                exprecion += " WHERE ";
+            }
+            exprecion += "lower(jsn::varchar) ~ E'" + palabras[i] + "'";
+
+        }
+        String consultaCount = "select count(ass.*) from ("
+                + "select to_json(jsn.*) as jsn FROM ("
+                + "select *,\n"
+                + "    (\n"
+                + "        select array_to_json(array_agg(mov.*))\n"
+                + "        from cardex_movimiento mov\n"
+                + "        where mov.id_cardex = ca.id\n"
+                + "        \n"
+                + "    )\n"
+                + "from \n"
+                + "    cardex ca,\n"
+                + "    repuesto rep\n"
+                + "where ca.id_repuesto = rep.id) jsn " + exprecion + ")ass";
+
+        String consultaArray = "select to_json(jsn.*) from\n"
+                + "(select ca.*, to_json(rep.*) as repuesto,\n"
+                + "    (\n"
+                + "        select array_to_json(array_agg(mov.*))\n"
+                + "        from cardex_movimiento mov\n"
+                + "        where mov.id_cardex = ca.id\n"
+                + "        \n"
+                + "    ) as movimientos\n"
+                + "from \n"
+                + "    cardex ca,\n"
+                + "    repuesto rep\n"
+                + "where ca.id_repuesto = rep.id\n"
+                + "order by ca.id desc \n"
+                + ") jsn " + exprecion + " LIMIT " + limit + " offset " + (pag * limit) + " ";
+
         String consulta = "select row_to_json(res) as json\n"
                 + "from(\n"
                 + "	select (\n"

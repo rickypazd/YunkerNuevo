@@ -309,7 +309,7 @@ public class CONSULTA {
 
                     }
                 }
-                consultaSelect += " ) tph ) as " + nombreTablaHijo + " ";
+                consultaSelect += "order by 2 desc) tph ) as " + nombreTablaHijo + " ";
                 consulta += ", " + consultaSelect;
             }
 

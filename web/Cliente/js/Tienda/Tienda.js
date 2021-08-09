@@ -7,24 +7,41 @@
 var url = "../pagClienteController";
 var objCategorias;
 var objMarcas;
-var id_usuario= 0;
-var busquedastr= "";
+var id_usuario = 0;
+var busquedastr = "";
 $(document).ready(function () {
+
     getCategoriasAndMarcas();
-   
+
 });
-
 function getCategoriasAndMarcas() {
+    var object;
+    if (sessionStorage.getItem("last_getCategoriasAndMarcas") > new Date().getTime() - 5000) {
 
-    miPost(url, {evento: "getCategoriasAndMarcas"}, function (resp) {
-        var json = $.parseJSON(resp.resp);
+        object = sessionStorage.getItem("getCategoriasAndMarcas");
+        var json = $.parseJSON(object);
         this.objCategorias = json.categorias;
         this.objMarcas = json.marcas;
         cargarCategorias();
         cargarMarcas();
-         segBusqueda();
+
+    } else {
+        miPost(url, {evento: "getCategoriasAndMarcas"}, function (resp) {
+            object = resp.resp;
+
+            sessionStorage.setItem("getCategoriasAndMarcas", object);
+            sessionStorage.setItem("last_getCategoriasAndMarcas", new Date().getTime());
+            var json = $.parseJSON(object);
+            this.objCategorias = json.categorias;
+            this.objMarcas = json.marcas;
+            cargarCategorias();
+            cargarMarcas();
 //        alert(resp);
-    });
+        }, true);
+    }
+
+
+
 }
 
 function cargarCategorias() {
@@ -42,15 +59,21 @@ function createCategoriaItn(obj) {
         return null;
     var html = "";
     html += "<div class='card'>";
-    html += "                                        <div class='card-header' id='heading" + obj.id + "'>";
+    html += "                                        <div class='' id='heading" + obj.id + "'>";
     html += "                                            <div class='mb-0' data-toggle='collapse' data-target='#collapse" + obj.id + "' aria-expanded='true' aria-controls='collapse" + obj.id + "'>";
 
-    html += "<label>";
-    html += "<input type='checkbox' name='categoriacb" + obj.id + "' value='" + JSON.stringify(obj) + "' id='categoriacb" + obj.id + "' onchange='CategoriaOnChange(this);'>";
+
+
+    html += "      <div class='funkyradio'>";
+    html += "      <div class='funkyradio-success'>";
+    html += "<input type='checkbox' name='categoriacb" + obj.id + "' value='" + JSON.stringify(obj) + "' id='categoriacb" + obj.id + "' onchange='CategoriaOnChange(this);'/>";
+    html += "<label for='categoriacb" + obj.id + "'>";
     html += obj.nombre + " (" + obj.sub_categorias.length + ")";
+    html += "<img src='" +PARAMS.url_image + obj.url_foto + "' alt='' style='width:auto; height:50px;' class='clear '/>";
+    html += ".</label>";
+    html += "</div>";
+    html += "</div>";
 
-
-    html += "</label>";
     html += "                                            </div> ";
     html += "                                        </div>";
     html += "                                        <div id='collapse" + obj.id + "' class='collapse' aria-labelledby='heading" + obj.id + "' data-parent='#accordion'>";
@@ -80,8 +103,8 @@ function SubCategoriaOnChange(itn) {
     var data = JSON.parse($(itn).val());
     var id = $(itn).attr("id");
     if ($(itn).is(":checked")) {
-        var obje = {tipo: 1, id_relacion: data.id, id_usuario: id_usuario , fecha : "now()", busqueda : busquedastr };
-        $("#filSubCategoria").append("<span data-busqueda='"+JSON.stringify(obje)+"'><a href='#" + id + "' id='fil" + id + "'>" + data.nombre + "</a><a href='javascript:void(0);' onclick='clickElm(\"" + id + "\");' alt='Eliminar.'>X</a></span>");
+        var obje = {tipo: 1, id_relacion: data.id, id_usuario: id_usuario, fecha: "now()", busqueda: busquedastr, nombre: data.nombre};
+        $("#filSubCategoria").append("<br><span data-busqueda='" + JSON.stringify(obje) + "'><a href='#" + id + "' id='fil" + id + "'>" + data.nombre + "</a><a href='javascript:void(0);' onclick='clickElm(\"" + id + "\");' alt='Eliminar.'>X</a></span>");
     } else {
         $("#filSubCategoria").find("#fil" + id).parent().remove();
     }
@@ -93,8 +116,8 @@ function CategoriaOnChange(itn) {
     var data = JSON.parse($(itn).val());
     var id = $(itn).attr("id");
     if ($(itn).is(":checked")) {
-          var obje = {tipo: 0, id_relacion: data.id, id_usuario: id_usuario , fecha : "now()", busqueda : busquedastr };
-        $("#filCategoria").append("<span data-busqueda='"+JSON.stringify(obje)+"'><a href='#" + id + "' id='fil" + id + "'>" + data.nombre + "</a><a href='javascript:void(0);' onclick='clickElm(\"" + id + "\");' alt='Eliminar.'>X ,</a></span>");
+        var obje = {tipo: 0, id_relacion: data.id, id_usuario: id_usuario, fecha: "now()", busqueda: busquedastr, nombre: data.nombre};
+        $("#filCategoria").append("<span data-busqueda='" + JSON.stringify(obje) + "'><a href='#" + id + "' id='fil" + id + "'>" + data.nombre + "</a><a href='javascript:void(0);' onclick='clickElm(\"" + id + "\");' alt='Eliminar.'>X ,</a></span>");
     } else {
         $("#filCategoria").find("#fil" + id).parent().remove();
     }
@@ -112,13 +135,13 @@ function clickElm(id) {
 function cargarMarcas() {
     $.each(objMarcas, function (i, obj) {
         var resp = createMarcaItn(obj);
-
         $("#acorMarcas").append(resp);
         if (obj.modelos != null) {
             cargarModelos(obj);
         }
 
     });
+    segBusqueda();
 }
 function createMarcaItn(obj) {
 
@@ -126,17 +149,15 @@ function createMarcaItn(obj) {
     html += "<div class='card'>";
     html += "                                        <div class='card-header' id='heading" + obj.id + "'>";
     html += "                                            <div class='mb-0' data-toggle='collapse' data-target='#collapse" + obj.id + "' aria-expanded='true' aria-controls='collapse" + obj.id + "'>";
-
     html += "<label>";
     html += "<input type='checkbox' name='marcacb" + obj.id + "' value='" + JSON.stringify(obj) + "' id='marcacb" + obj.id + "' onchange='marcaOnChange(this);'>";
     if (obj.modelos != null) {
         html += obj.nombre + " (" + obj.modelos.length + ")";
-
     } else {
         html += obj.nombre + " (0)";
     }
 
-    html += "<img src='../" + obj.url_foto + "' alt='' style='width:auto; height:50px;' class='clear clearChecks'/>";
+    html += "<img src='" +PARAMS.url_image + obj.url_foto + "' alt='' style='width:auto; height:50px;' class='clear clearChecks'/>";
     html += "</label>";
     html += "                                            </div> ";
     html += "                                        </div>";
@@ -162,8 +183,7 @@ function createModeloItn(obj) {
     html += "<input type='checkbox' name='Modelo" + obj.id + "' value='" + JSON.stringify(obj) + "' id='cbModelo" + obj.id + "' onchange='ModeloOnChange(this);'>";
     html += obj.nombre;
     html += "</div>";
-
-    html += "<img src='../" + obj.url_foto + "' alt='' style='width:auto; height:65px;' class='ml-auto p-2'/>";
+    html += "<img src='" +PARAMS.url_image + obj.url_foto + "' alt='' style='width:auto; height:65px;' class='ml-auto p-2'/>";
     html += "</div>";
     return html;
 }
@@ -171,8 +191,8 @@ function ModeloOnChange(itn) {
     var data = JSON.parse($(itn).val());
     var id = $(itn).attr("id");
     if ($(itn).is(":checked")) {
-          var obje = {tipo: 3, id_relacion: data.id, id_usuario: id_usuario , fecha : "now()", busqueda : busquedastr };
-        $("#filModelo").append("<span data-busqueda='"+JSON.stringify(obje)+"'><a href='#" + id + "' id='fil" + id + "'>" + data.nombre + "</a><a href='javascript:void(0);' onclick='clickElm(\"" + id + "\");' alt='Eliminar.'>X</a></span>");
+        var obje = {tipo: 3, id_relacion: data.id, id_usuario: id_usuario, fecha: "now()", busqueda: busquedastr, nombre: data.nombre};
+        $("#filModelo").append("<span data-busqueda='" + JSON.stringify(obje) + "'><a href='#" + id + "' id='fil" + id + "'>" + data.nombre + "</a><a href='javascript:void(0);' onclick='clickElm(\"" + id + "\");' alt='Eliminar.'>X</a></span>");
     } else {
         $("#filModelo").find("#fil" + id).parent().remove();
     }
@@ -184,8 +204,8 @@ function marcaOnChange(itn) {
     var data = JSON.parse($(itn).val());
     var id = $(itn).attr("id");
     if ($(itn).is(":checked")) {
-          var obje = {tipo: 2, id_relacion: data.id, id_usuario: id_usuario , fecha : "now()", busqueda : busquedastr };
-        $("#filMarca").append("<span data-busqueda='"+JSON.stringify(obje)+"'><a href='#" + id + "' id='fil" + id + "'>" + data.nombre + "</a><a href='javascript:void(0);' onclick='clickElm(\"" + id + "\");' alt='Eliminar.'>X ,</a></span>");
+        var obje = {tipo: 2, id_relacion: data.id, id_usuario: id_usuario, fecha: "now()", busqueda: busquedastr, nombre: data.nombre};
+        $("#filMarca").append("<span data-busqueda='" + JSON.stringify(obje) + "'><a href='#" + id + "' id='fil" + id + "'>" + data.nombre + "</a><a href='javascript:void(0);' onclick='clickElm(\"" + id + "\");' alt='Eliminar.'>X ,</a></span>");
     } else {
         $("#filMarca").find("#fil" + id).parent().remove();
     }
@@ -201,88 +221,107 @@ function selectPrice(itn) {
         $("#filPrecio").find("#fil" + id).parent().remove();
     } else {
         $(itn).addClass("active");
-
-         var obje = {tipo: 4, id_relacion: data.id, id_usuario: id_usuario , fecha : "now()", busqueda : busquedastr };
-        $("#filPrecio").append("<span data-busqueda='"+JSON.stringify(obje)+"'><a href='#" + id + "' id='fil" + id + "'>" + data.text + "</a><a href='javascript:void(0);' onclick='clickElm(\"" + id + "\");' alt='Eliminar.'>X ,</a></span>");
+        var obje = {tipo: 4, id_relacion: data.id, id_usuario: id_usuario, fecha: "now()", busqueda: busquedastr, nombre: data.text};
+        $("#filPrecio").append("<span data-busqueda='" + JSON.stringify(obje) + "'><a href='#" + id + "' id='fil" + id + "'>" + data.text + "</a><a href='javascript:void(0);' onclick='clickElm(\"" + id + "\");' alt='Eliminar.'>X ,</a></span>");
 
     }
     segBusqueda();
 }
 
-function segBusqueda(){
-    var filcat= $("#filCategoria").find("span");  //0
-    var filsubcat= $("#filSubCategoria").find("span") ; //1
-    var filmarca= $("#filMarca").find("span");  //2
-    var filmodelo= $("#filModelo").find("span"); //3
-    var busqueda = [];
-    $.each(filcat , function(i,obj){
-       busqueda.push($(obj).data("busqueda")); 
+function segBusqueda() {
+    var filcat = $("#filCategoria").find("span"); //0
+    var filsubcat = $("#filSubCategoria").find("span"); //1
+    var filmarca = $("#filMarca").find("span"); //2
+    var filmodelo = $("#filModelo").find("span"); //3
+    var busqueda = "";
+    $.each(filcat, function (i, obj) {
+        busqueda += " " + ($(obj).data("busqueda")).nombre + " ";
     });
-    $.each(filsubcat , function(i,obj){
-       busqueda.push($(obj).data("busqueda")); 
+    $.each(filsubcat, function (i, obj) {
+        busqueda += " " + ($(obj).data("busqueda")).nombre + " ";
     });
-    $.each(filmarca , function(i,obj){
-       busqueda.push($(obj).data("busqueda")); 
+    $.each(filmarca, function (i, obj) {
+        busqueda += " " + ($(obj).data("busqueda")).nombre + " ";
     });
-    $.each(filmodelo , function(i,obj){
-       busqueda.push($(obj).data("busqueda")); 
+    $.each(filmodelo, function (i, obj) {
+        busqueda += " " + ($(obj).data("busqueda")).nombre + " ";
     });
+
     cargar_repuestos(busqueda);
 }
-function cargar_repuestos(busqueda){
-      miPost(url, {evento: "getBusqueda", busqueda: JSON.stringify(busqueda)}, function (resp) {
-          $("#listaRep").html("");
-        var json = $.parseJSON(resp.resp);
-        
-        $.each(json,function(i,obj){
+function cargar_repuestos(busqueda) {
+//    mostrar_progress();
+    if (sessionStorage.getItem("last_getBuscarTienda") == busqueda) {
+        var json = $.parseJSON(sessionStorage.getItem("getBuscarTienda"));
+        $.each(json, function (i, obj) {
+              document.getElementById("cargando-icon").style.opacity=0;
             cargarIten(obj);
         });
-        
-    });
+    } else {
+        miPost(url, {evento: "getBuscarTienda", pag: 0, busqueda: JSON.stringify(busqueda)}, function (resp) {
+            $("#listaRep").html("");
+//        cerrar_progress()
+            document.getElementById("cargando-icon").style.opacity=0;
+            sessionStorage.setItem("getBuscarTienda", resp.resp);
+            sessionStorage.setItem("last_getBuscarTienda", busqueda);
+            var json = $.parseJSON(resp.resp);
+            $.each(json, function (i, obj) {
+                cargarIten(obj);
+            });
+           
+
+        }, true);
+    }
+
+
 }
 
-function cargarIten(obj){
+function cargarIten(obj) {
     var html = "<div class='col-lg-4 col-md-6 col-sm-12'>";
-    html+="                                <div class='tile'>";
-    html+="                                    <div class='badges'>";
-    html+="                                        <span class='sale'></span>";
-    html+="                                    </div>";
-    html+="                                    <div class='price-label'>"+obj.precio+" Bs.</div>";
-    html+="                                    <a href='repuesto.html?id="+obj.id+"'><img class='foto_rep' src='../"+obj.url_foto+"' alt='1'/></a>";
-    html+="                                    <div class='footer'>";
-    html+="                                        <a href='#'>"+obj.nombre+"</a>";
-    html+="                                        <span>Codigo: "+obj.codigo+"</span>";
-    var cant = obj.cantidad || 0;
-    html+="                                        <span>Cantidad: "+cant+"</span>";
-    html+="                                        <span>"+obj.nombrecat+"</span>";
-    html+="                                        <span>"+obj.nombresubcat+"</span>";
-    html+="                                        <div class='tools'>";
-    html+="                                            <div class='rate'>";
-    html+="                                                <span class='active'></span>";
-    html+="                                                <span class='active'></span>";
-    html+="                                                <span class='active'></span>";
-    html+="                                                <span></span>";
-    html+="                                                <span></span>";
-    html+="                                            </div>";
-    html+="                                            <!--Add To Cart Button-->";
-    html+="                                            <a class='add-cart-btn' href='javaScript:void(0);' onclick='addToCarrito("+JSON.stringify(obj)+");'><span>Agregar al carrito</span><i class='icon-shopping-cart'></i></a>";
-    html+="                                            <!--Share Button-->";
-    html+="                                            <div class='share-btn'>";
-    html+="                                                <div class='hover-state'>";
-    html+="                                                    <a class='fa fa-facebook-square' href='#'></a>";
-    html+="                                                    <a class='fa fa-twitter-square' href='#'></a>";
-    html+="                                                    <a class='fa fa-google-plus-square' href='#'></a>";
-    html+="                                                </div>";
-    html+="                                                <i class='fa fa-share'></i>";
-    html+="                                            </div>";
-    html+="                                            <!--Add To Wishlist Button-->";
-    html+="                                            <a class='wishlist-btn' href='#'>";
-    html+="                                                <div class='hover-state'>Deseados</div>";
-    html+="                                                <i class='fa fa-plus'></i>";
-    html+="                                            </a>";
-    html+="                                        </div>";
-    html+="                                    </div>";
-    html+="                                </div>";
-    html+="                            </div>";
+    html += "                                <div class='tile'>";
+    html += "                                    <div class='badges'>";
+    html += "                                        <span class='sale'></span>";
+    html += "                                    </div>";
+    html += "                                    <div class='price-label'>" + (obj.precio ? (obj.precio + " Bs.") : ("Sin asignar")) + "</div>";
+    html += "                                    <a href='repuesto.html?id=" + obj.repuesto.id + "'><img class='foto_rep' src='" + PARAMS.url_image +obj.repuesto.url_foto + "' alt='1'/></a>";
+    html += "                                    <div class='footer'>";
+    var nombre = obj.repuesto.nombre || "";
+    html += "                                        <a href='#'>" + nombre + "</a>";
+    html += "                                        <span>Codigo: " + obj.repuesto.codigo + "</span>";
+    if (obj.rep_categoria_rec) {
+        obj.rep_categoria_rec = JSON.parse(obj.rep_categoria_rec);
+    }
+    html += "                         <span>";
+    html += (obj.rep_categoria_rec[0].nombre || "(ES) ");
+    html += (obj.rep_categoria_rec[0].name || "(EN) ");
+    html += "</span>";
+
+
+    if (obj.rep_categoria_rec.length > 1) {
+        html += "                         <span>" + (obj.rep_categoria_rec[1].nombre || "");
+        html += (obj.rep_categoria_rec[1].name || "") + "</span>";
+    }
+
+    if (obj.rep_detalle != null) {
+        for (var i = 0; i < obj.rep_detalle.length; i++) {
+            if (obj.rep_detalle[i].valor.length > 0) {
+
+                html += "                         <span>" + obj.rep_detalle[i].detalle + " ";
+                html += obj.rep_detalle[i].valor + "</span>";
+
+            }
+
+        }
+    }
+    html += "                                        <div class='tools'>";
+
+    html += "                                            <!--Add To Cart Button-->";
+    html += "                                            <a class='add-cart-btn' href='javaScript:void(0);' onclick='addToCarrito(" + JSON.stringify(obj.repuesto) + ");'><span>Agregar al carrito</span><i class='icon-shopping-cart'></i></a>";
+    html += "                                            <!--Share Button-->";
+
+    html += "                                        </div>";
+    html += "                                    </div>";
+    html += "                                </div>";
+    html += "                            </div>";
     $("#listaRep").append(html);
 }

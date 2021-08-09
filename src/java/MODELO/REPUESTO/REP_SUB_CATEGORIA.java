@@ -30,9 +30,9 @@ public class REP_SUB_CATEGORIA {
     }
 
     public int Insertar() throws SQLException {
-        String consulta = "INSERT INTO public." + TBL + "(\n"
-                + "	nombre, id_rep_categoria)\n"
-                + "	VALUES (?, ?);";
+        String consulta = "INSERT INTO public.rep_categoria_rec(\n"
+                + "	nombre, id_padre,estado)\n"
+                + "	VALUES (?, ?, 0);";
         PreparedStatement ps = con.statamet(consulta);
 
         ps.setString(1, getNOMBRE());
@@ -84,7 +84,7 @@ public class REP_SUB_CATEGORIA {
         return arr;
     }
            public int eliminar() throws SQLException {
-        String consulta = "UPDATE public." + TBL + " \n"
+        String consulta = "UPDATE public.rep_categoria_rec \n"
                 + "	SET estado=?\n"
                 + "	WHERE id=" + getID();
         PreparedStatement ps = con.statamet(consulta);

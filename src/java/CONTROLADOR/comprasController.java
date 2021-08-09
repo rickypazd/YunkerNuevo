@@ -13,8 +13,10 @@ import MODELO.AUTO.REP_AUTO;
 import MODELO.AUTO.REP_AUTO_MARCA;
 import MODELO.COMPRA.COMPRA;
 import MODELO.COMPRA.COMPRA_DETALLE;
+import MODELO.COMPRA.DEVOLUCION;
 import MODELO.COMPRA.VENTA;
 import MODELO.COMPRA.VENTA_DETALLE;
+import MODELO.COMPRA.VENTA_PLAN_CUENTA;
 import MODELO.REPUESTO.REPUESTO;
 import MODELO.REPUESTO.REP_CATEGORIA;
 import MODELO.REPUESTO.REP_DETALLE;
@@ -63,7 +65,7 @@ import org.json.JSONObject;
  * @author RICKY
  */
 @MultipartConfig
-@WebServlet(name = "comprasController", urlPatterns = {"/comprasController"})
+@WebServlet(name = "comprasController", urlPatterns = {"/admin/comprasController"})
 
 public class comprasController extends HttpServlet {
 
@@ -100,11 +102,29 @@ public class comprasController extends HttpServlet {
                 case "realizar_venta":
                     html = realizar_venta(request, con);
                     break;
+                case "devolverArticulo":
+                    html = devolverArticulo(request, con);
+                    break;
+                case "get_venta_id":
+                    html = get_venta_id(request, con);
+                    break;
+                case "get_compra_id":
+                    html = get_compra_id(request, con);
+                    break;
                 case "getVentasPagination":
                     html = getVentasPagination(request, con);
                     break;
+                case "getVentasCuotasPagination":
+                    html = getVentasCuotasPagination(request, con);
+                    break;
                 case "getComprasPagination":
                     html = getComprasPagination(request, con);
+                    break;
+                case "getGananciaTotal":
+                    html = getGananciaTotal(request, con);
+                    break;
+                case "pagar_cuota":
+                    html = pagar_cuota(request, con);
                     break;
 
 //</editor-fold>
@@ -188,7 +208,7 @@ public class comprasController extends HttpServlet {
             String fecha = pString(request, "fecha");
             double total = pDouble(request, "total");
             int id_admin = pInt(request, "id_admin");
-            
+
             String arr_detalle = pString(request, "arr_detalle");
             COMPRA compra = new COMPRA(con);
             //TODO: parsear fecha
@@ -202,15 +222,18 @@ public class comprasController extends HttpServlet {
             for (int i = 0; i < arr.length(); i++) {
                 temp = arr.getJSONObject(i);
                 id_com_detalle = compra_detalle.Insertar(id, temp.getString("nombre"), temp.getString("descripcion"), temp.getInt("cantidad"), temp.getDouble("precio"), temp.getDouble("subTotal"), 1, temp.getInt("id_articulo"));
-                int id_almacen =  temp.getInt("id_almacen");
+                REPUESTO rep = new REPUESTO(con);
+                rep.setID(temp.getInt("id_articulo"));
+                rep.editarPrecio(temp.getDouble("precioVenta"));
+                int id_almacen = temp.getInt("id_almacen");
                 for (int j = 0; j < temp.getInt("cantidad"); j++) {
-                    cardex.InsertarRepuesto(temp.getInt("id_articulo"), new Date(), 1, id_almacen, id_com_detalle);
-
+                    int id_cardex = cardex.InsertarRepuesto(temp.getInt("id_articulo"));
+                    cardex.InsertarMovimiento(id_cardex, 1, id_almacen, id_com_detalle);
                 }
 
             }
 
-            RESPUESTA resp = new RESPUESTA(1, "", nameAlert + " registrado con exito.", "");
+            RESPUESTA resp = new RESPUESTA(1, "", nameAlert + " registrado con exito.", id + "");
             return resp.toString();
         } catch (SQLException ex) {
             con.rollback();
@@ -238,6 +261,9 @@ public class comprasController extends HttpServlet {
             double total = pDouble(request, "total");
             int id_admin = pInt(request, "id_admin");
             int id_almacen = pInt(request, "id_almacen");
+
+            int cuotas = pInt(request, "cuotas");
+
             String arr_detalle = pString(request, "arr_detalle");
             VENTA venta = new VENTA(con);
             //TODO: parsear fecha
@@ -250,13 +276,25 @@ public class comprasController extends HttpServlet {
             int id_com_detalle;
             for (int i = 0; i < arr.length(); i++) {
                 temp = arr.getJSONObject(i);
-                id_com_detalle = venta_detalle.Insertar(id, temp.getString("nombre"), temp.getString("descripcion"), temp.getInt("cantidad"), temp.getDouble("precio"), temp.getDouble("subTotal"), 1, temp.getInt("id_articulo"));
+                id_com_detalle = venta_detalle.Insertar(id, temp.getString("nombre"), temp.getString("descripcion"), temp.getInt("cantidad"), temp.getDouble("precio"), temp.getDouble("subTotal"), 1, temp.getInt("id_articulo"), temp.getInt("descuento"));
 
-                cardex.VenderRepuesto(id_com_detalle, temp.getInt("cantidad"), temp.getInt("id_articulo"));
+                cardex.VenderRepuesto(id_com_detalle, temp.getInt("cantidad"), temp.getInt("id_articulo"), id_admin);
+
+            }
+            if (cuotas > 1) {
+
+                String arr_cuotoas = pString(request, "plandetalle");
+                JSONArray arrCuotas = new JSONArray(arr_cuotoas);
+                VENTA_PLAN_CUENTA venta_plan_cuenta = new VENTA_PLAN_CUENTA(con);
+                for (int i = 0; i < arrCuotas.length(); i++) {
+                    temp = arrCuotas.getJSONObject(i);
+                    venta_plan_cuenta.Insertar(temp.getInt("numero"), temp.getString("fecha"), temp.getDouble("cuota"), id);
+
+                }
 
             }
 
-            RESPUESTA resp = new RESPUESTA(1, "", nameAlert + " registrado con exito.", "");
+            RESPUESTA resp = new RESPUESTA(1, "", nameAlert + " registrado con exito.", id + "");
             return resp.toString();
         } catch (SQLException ex) {
             con.rollback();
@@ -264,24 +302,28 @@ public class comprasController extends HttpServlet {
             RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al registrar " + nameAlert + ".", "{}");
             return resp.toString();
         } catch (JSONException ex) {
+            con.rollback();
             Logger.getLogger(comprasController.class.getName()).log(Level.SEVERE, null, ex);
             RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al registrar " + nameAlert + ".", "{}");
             return resp.toString();
         } catch (ParseException ex) {
+            con.rollback();
             Logger.getLogger(comprasController.class.getName()).log(Level.SEVERE, null, ex);
             RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al parsear fecha", "{}");
             return resp.toString();
         }
     }
-    
+
     private String getVentasPagination(HttpServletRequest request, Conexion con) {
         String nameAlert = "ventas";
         try {
             int pagina = pInt(request, "pagina");
             int cantidad = pInt(request, "cantidad");
             String busqueda = pString(request, "busqueda");
+            String fecha = pString(request, "fecha");
+            String fechaFin = pString(request, "fechaFin");
             VENTA venta = new VENTA(con);
-            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", venta.getPaginationJSON(pagina, cantidad, busqueda));
+            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", venta.getPaginationJSON(pagina, cantidad, busqueda, fecha, fechaFin));
             return resp.toString();
         } catch (SQLException ex) {
             con.rollback();
@@ -295,14 +337,14 @@ public class comprasController extends HttpServlet {
             return resp.toString();
         }
     }
-    private String getComprasPagination(HttpServletRequest request, Conexion con) {
-        String nameAlert = "compras";
+    private String getVentasCuotasPagination(HttpServletRequest request, Conexion con) {
+        String nameAlert = "ventas";
         try {
             int pagina = pInt(request, "pagina");
             int cantidad = pInt(request, "cantidad");
             String busqueda = pString(request, "busqueda");
-            COMPRA compra = new COMPRA(con);
-            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", compra.getPaginationJSON(pagina, cantidad, busqueda));
+            VENTA venta = new VENTA(con);
+            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", venta.getPaginationCuotasJSON(pagina, cantidad, busqueda));
             return resp.toString();
         } catch (SQLException ex) {
             con.rollback();
@@ -311,6 +353,163 @@ public class comprasController extends HttpServlet {
             return resp.toString();
         } catch (JSONException ex) {
             con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        }
+    }
+
+    private String getComprasPagination(HttpServletRequest request, Conexion con) {
+        String nameAlert = "compras";
+        try {
+            int pagina = pInt(request, "pagina");
+            int cantidad = pInt(request, "cantidad");
+            String busqueda = pString(request, "busqueda");
+            String fecha = pString(request, "fecha");
+            String fechaFin = pString(request, "fechaFin");
+            COMPRA compra = new COMPRA(con);
+            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", compra.getPaginationJSON(pagina, cantidad, busqueda, fecha, fechaFin));
+            return resp.toString();
+        } catch (SQLException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al obtener " + nameAlert + ".", "{}");
+            return resp.toString();
+        } catch (JSONException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        }
+    }
+
+    private String get_venta_id(HttpServletRequest request, Conexion con) {
+        String nameAlert = "ventas";
+        try {
+            int id = pInt(request, "id");
+
+            VENTA venta = new VENTA(con);
+            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", venta.getById(id));
+            return resp.toString();
+        } catch (SQLException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al obtener " + nameAlert + ".", "{}");
+            return resp.toString();
+        } catch (JSONException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        }
+    }
+
+    private String get_compra_id(HttpServletRequest request, Conexion con) {
+        String nameAlert = "compras";
+        try {
+            int id = pInt(request, "id");
+
+            COMPRA compra = new COMPRA(con);
+            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", compra.getById(id));
+            return resp.toString();
+        } catch (SQLException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al obtener " + nameAlert + ".", "{}");
+            return resp.toString();
+        } catch (JSONException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        }
+    }
+
+    private String getGananciaTotal(HttpServletRequest request, Conexion con) {
+        String nameAlert = "ventas";
+        try {
+            String fecha = pString(request, "fecha");
+            String fechaFin = pString(request, "fechaFin");
+            VENTA venta = new VENTA(con);
+            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", venta.gerGananciaTotal(fecha, fechaFin));
+            return resp.toString();
+        } catch (SQLException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al obtener " + nameAlert + ".", "{}");
+            return resp.toString();
+        } catch (JSONException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        }
+    }
+
+    private String devolverArticulo(HttpServletRequest request, Conexion con) {
+        String nameAlert = "devolucion";
+        try {
+            String obj = pString(request, "obj");
+            JSONObject objJson = new JSONObject(obj);
+            JSONObject temp = objJson;
+            int id_admin = pInt(request, "id_admin");
+            VENTA_DETALLE venta_detalle = new VENTA_DETALLE(con);
+            int id_ref = venta_detalle.Insertar(
+                    temp.getInt("id_venta"),
+                    temp.getString("nombre"),
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),
+                    temp.getInt("cantidad"),
+                    temp.getDouble("precio") * -1,
+                    temp.getInt("cantidad")*temp.getDouble("precio")* -1,
+                    1,
+                    temp.getInt("id_articulo"),
+                    0
+            );
+            venta_detalle.ajustarPlanDePagos(temp.getInt("id_venta"),  temp.getInt("cantidad")*temp.getDouble("precio"));
+            CARDEX cardex = new CARDEX(con);
+
+            cardex.devolverRepuesto(temp.getInt("id"), id_admin, temp.getInt("cantidad"), id_ref);
+
+//HACER LA DEVOLUCION COMO UNA COMPRA PERO AGREGARLA A VENTA DETALLE EL CARDEX TIPO ES 2 DE DEVOLUCION
+            DEVOLUCION devolucion = new DEVOLUCION(con);
+            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", devolucion.toString());
+            return resp.toString();
+        } catch (JSONException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        } catch (SQLException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        }
+    }
+
+    private String pagar_cuota(HttpServletRequest request, Conexion con) {
+        String nameAlert = "pagar";
+        try {
+            int id = pInt(request, "id");
+            String consulta = "UPDATE public.venta_plan_cuenta\n"
+                    + "	SET fecha_on=now() \n"
+                    + "	WHERE id = "+id;
+            con.EjecutarUpdate(consulta);
+            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", "exito");
+            return resp.toString();
+        } catch (SQLException ex) {
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        } catch (InstantiationException ex) {
             Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
             RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
             return resp.toString();

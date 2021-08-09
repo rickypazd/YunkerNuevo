@@ -64,7 +64,7 @@ import org.json.JSONObject;
  * @author RICKY
  */
 @MultipartConfig
-@WebServlet(name = "indicadoresController", urlPatterns = {"/indicadoresController"})
+@WebServlet(name = "indicadoresController", urlPatterns = {"/admin/indicadoresController"})
 
 public class indicadoresController extends HttpServlet {
 
@@ -192,50 +192,6 @@ public class indicadoresController extends HttpServlet {
         }
     }
 
-    private String realizar_venta(HttpServletRequest request, Conexion con) {
-        String nameAlert = "venta";
-        try {
-            String codigo = pString(request, "codigo");
-            String nombre_cliente = pString(request, "nombre_cliente");
-            String nit = pString(request, "nit");
-            String fecha = pString(request, "fecha");
-            double total = pDouble(request, "total");
-            int id_admin = pInt(request, "id_admin");
-            int id_almacen = pInt(request, "id_almacen");
-            String arr_detalle = pString(request, "arr_detalle");
-            VENTA venta = new VENTA(con);
-            //TODO: parsear fecha
-            SimpleDateFormat form = new SimpleDateFormat("dd/MM/yyyy");
-            int id = venta.Insertar(codigo, form.parse(fecha), nit, nombre_cliente, total, id_admin);
-            JSONArray arr = new JSONArray(arr_detalle);
-            VENTA_DETALLE venta_detalle = new VENTA_DETALLE(con);
-            CARDEX cardex = new CARDEX(con);
-            JSONObject temp;
-            int id_com_detalle;
-            for (int i = 0; i < arr.length(); i++) {
-                temp = arr.getJSONObject(i);
-                id_com_detalle = venta_detalle.Insertar(id, temp.getString("nombre"), temp.getString("descripcion"), temp.getInt("cantidad"), temp.getDouble("precio"), temp.getDouble("subTotal"), 1, temp.getInt("id_articulo"));
-
-                cardex.VenderRepuesto(id_com_detalle, temp.getInt("cantidad"), temp.getInt("id_articulo"));
-
-            }
-
-            RESPUESTA resp = new RESPUESTA(1, "", nameAlert + " registrado con exito.", "");
-            return resp.toString();
-        } catch (SQLException ex) {
-            con.rollback();
-            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
-            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al registrar " + nameAlert + ".", "{}");
-            return resp.toString();
-        } catch (JSONException ex) {
-            Logger.getLogger(indicadoresController.class.getName()).log(Level.SEVERE, null, ex);
-            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al registrar " + nameAlert + ".", "{}");
-            return resp.toString();
-        } catch (ParseException ex) {
-            Logger.getLogger(indicadoresController.class.getName()).log(Level.SEVERE, null, ex);
-            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al parsear fecha", "{}");
-            return resp.toString();
-        }
-    }
+    
 
 }

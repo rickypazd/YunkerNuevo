@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.CallableStatement;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +38,7 @@ public class REPUESTO {
 
     public int Insertar() throws SQLException {
         String consulta = "INSERT INTO public." + TBL + "(\n"
-                + "	codigo, nombre, precio, tipo, id_rep_sub_categoria)\n"
+                + "	codigo, nombre, precio, tipo, id_rep_categoria)\n"
                 + "	VALUES (?, ?, ?, ?, ?);";
         PreparedStatement ps = con.statamet(consulta);
 
@@ -58,10 +60,25 @@ public class REPUESTO {
         return id;
     }
 
+    public int InsertarFoto(String url) throws SQLException {
+        String consulta = "INSERT INTO public.rep_fotos (\n"
+                + "	id_repuesto,estado,url)\n"
+                + "	VALUES (?, ?, ?);";
+        PreparedStatement ps = con.statamet(consulta);
+
+        ps.setInt(1, getID());
+        ps.setInt(2, 0);
+        ps.setString(3, url);
+
+        ps.execute();
+        ps.close();
+        return 1;
+    }
+
     public int InsertarHijo() throws SQLException {
         String consulta = "INSERT INTO public." + TBL + "(\n"
-                + "	codigo, nombre, precio, tipo, id_padre, id_rep_sub_categoria)\n"
-                + "	VALUES (?, ?, ?, ?, ?, (SELECT id_rep_sub_categoria from repuesto where id = ?));";
+                + "	codigo, nombre, precio, tipo, id_padre, id_rep_categoria)\n"
+                + "	VALUES (?, ?, ?, ?, ?, (SELECT id_rep_categoria from repuesto where id = ?));";
         PreparedStatement ps = con.statamet(consulta);
 
         ps.setString(1, getCODIGO());
@@ -85,15 +102,16 @@ public class REPUESTO {
 
     public int InsertarPosicionEsquema(int id, double x, double y, double width, double height) throws SQLException {
         String consulta = "INSERT INTO public.rep_posicion_esquema(\n"
-                + "	id_repuesto, x, y, width, height)\n"
-                + "	VALUES (?, ?, ?, ?, ?);";
+                + "	id_repuesto,id_esquema, x, y, width, height)\n"
+                + "	VALUES (?, ?, ?, ?, ?, ?);";
         PreparedStatement ps = con.statamet(consulta);
 
         ps.setInt(1, id);
-        ps.setDouble(2, x);
-        ps.setDouble(3, y);
-        ps.setDouble(4, width);
-        ps.setDouble(5, height);
+        ps.setInt(2, getID_PADRE());
+        ps.setDouble(3, x);
+        ps.setDouble(4, y);
+        ps.setDouble(5, width);
+        ps.setDouble(6, height);
         ps.execute();
         ps.close();
         return id;
@@ -110,6 +128,17 @@ public class REPUESTO {
         return row;
     }
 
+    public int editarPrecio(double precio) throws SQLException {
+        String consulta = "UPDATE public." + TBL + "\n"
+                + "	SET precio=?\n"
+                + "	WHERE id=" + getID();
+        PreparedStatement ps = con.statamet(consulta);
+        ps.setDouble(1, precio);
+        int row = ps.executeUpdate();
+        ps.close();
+        return row;
+    }
+
     public int editar() throws SQLException {
         String consulta = "UPDATE public." + TBL + "\n"
                 + "	SET nombre=?\n"
@@ -121,10 +150,31 @@ public class REPUESTO {
         return row;
     }
 
+    public int editarCampo(String campo, String valor) throws SQLException {
+        String consulta = "UPDATE public." + TBL + "\n"
+                + "	SET " + campo + "=?\n"
+                + "	WHERE id=" + getID();
+        PreparedStatement ps = con.statamet(consulta);
+        ps.setString(1, valor);
+        int row = ps.executeUpdate();
+        ps.close();
+        return row;
+    }
+
     public int eliminar() throws SQLException {
         String consulta = "UPDATE public." + TBL + " \n"
                 + "	SET estado=?\n"
                 + "	WHERE id=" + getID();
+        PreparedStatement ps = con.statamet(consulta);
+        ps.setInt(1, 1);
+        int row = ps.executeUpdate();
+        ps.close();
+        return row;
+    }
+    public int eliminarFoto(int id) throws SQLException {
+        String consulta = "UPDATE public.rep_fotos \n"
+                + "	SET estado=?\n"
+                + "	WHERE id=" + id;
         PreparedStatement ps = con.statamet(consulta);
         ps.setInt(1, 1);
         int row = ps.executeUpdate();
@@ -176,6 +226,51 @@ public class REPUESTO {
     }
 
     public String getByIdJson(int id) throws SQLException, JSONException {
+        String consultaAlmacen = "select  al.nombre || ' - ' || als.nombre\n"
+                + "from \n"
+                + "cardex ca, \n"
+                + "cardex_movimiento cm,\n"
+                + "almacen_sec als,\n"
+                + "almacen al\n"
+                + "where \n"
+                + "ca.id = cm.id_cardex\n"
+                + "and cm.tipo = 1\n"
+                + "and ca.id_repuesto = r.id\n"
+                + "and als.id = cm.id_almacen\n"
+                + "and als.id_almacen = al.id\n"
+                + "order by cm.fecha desc\n"
+                + "limit 1";
+        String consultaCantidad = "SELECT\n"
+                + "    COUNT(tabla.id_repuesto) AS cantidad\n"
+                + "FROM\n"
+                + "    repuesto repcount,\n"
+                + "    (\n"
+                + "        SELECT\n"
+                + "            ca.*,\n"
+                + "            (\n"
+                + "                SELECT\n"
+                + "                    cam.tipo\n"
+                + "                FROM\n"
+                + "                    cardex_movimiento cam\n"
+                + "                WHERE\n"
+                + "                    cam.id_cardex = ca.id\n"
+                + "                ORDER BY\n"
+                + "                    cam.fecha DESC\n"
+                + "                LIMIT 1) AS tipo\n"
+                + "        FROM\n"
+                + "            cardex ca\n"
+                + "        WHERE\n"
+                + "            ca.id_repuesto = r.id) tabla\n"
+                + "WHERE\n"
+                + "    repcount.id = tabla.id_repuesto\n"
+                + "    AND tabla.tipo IN (1, 2)\n"
+                + "GROUP BY\n"
+                + "    repcount.id";
+
+        String consultaFotos = "select array_to_json(array_agg(rf.*)) as fotos\n"
+                + "from rep_fotos rf\n"
+                + "where rf.id_repuesto = r.id\n"
+                + "and rf.estado = 0 ";
         String consulta = "WITH RECURSIVE recur AS (\n"
                 + "    SELECT\n"
                 + "        rcr.id,\n"
@@ -218,11 +313,18 @@ public class REPUESTO {
                 + "        id_padre IS NULL) as categoria,\n"
                 + "    (\n"
                 + "        SELECT\n"
-                + "            to_json(r.*) \n"
-                + "        FROM\n"
-                + "            repuesto r\n"
-                + "        WHERE\n"
-                + "            r.id = ?) as repuesto\n"
+                + "            to_json(rep.*) \n"
+                + "        FROM (\n"
+                + "             SELECT\n"
+                + "                r.* \n"
+                + ", (" + consultaCantidad + ") AS cantidad\n"
+                + ", (" + consultaAlmacen + ") AS almacen\n"
+                + ", (" + consultaFotos + ") AS fotos\n"
+                + "             FROM\n"
+                + "                 repuesto r\n"
+                + "             WHERE\n"
+                + "                 r.id = ?) as rep\n"
+                + "     ) as repuesto\n"
                 + ")jsf";
         PreparedStatement ps = con.statamet(consulta);
         ps.setInt(1, id);
@@ -246,6 +348,7 @@ public class REPUESTO {
                 + "                GROUP BY (car.id_repuesto)) AS cantidad ,   (SELECT array_to_json(array_agg(rd.*)) AS json\n"
                 + "                   	FROM rep_detalle rd\n"
                 + "                    WHERE rd.id_repuesto = rep.id\n"
+                + "                    and rd.estado = 0\n"
                 + "                 ) AS arr_detalle,(\n"
                 + "                      WITH RECURSIVE path AS (\n"
                 + "\n"
@@ -280,18 +383,50 @@ public class REPUESTO {
         return resp;
     }
 
+    public String getByAutoCat(int idAuto, int idCat) throws SQLException, JSONException {
+        String consulta = "select array_to_json(array_agg(resp.*)) as json\n"
+                + "from (\n"
+                + "select rep.*\n"
+                + "from \n"
+                + "    repuesto rep,\n"
+                + "    rep_to_rep_auto rtra\n"
+                + "WHERE\n"
+                + "    rep.id = rtra.id_repuesto\n"
+                + "and rtra.id_rep_auto = ?\n"
+                + "and rep.id_padre is null\n"
+                + "and rep.id_rep_categoria = ?\n"
+                + ") resp";
+        PreparedStatement ps = con.statamet(consulta);
+        ps.setInt(1, idAuto);
+        ps.setInt(2, idCat);
+
+        String resp = "";
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            resp = rs.getString("json");
+        }
+        ps.close();
+        rs.close();
+        return resp;
+    }
+
     public String getByIdPaginaCli(int id) throws SQLException, JSONException {
+        
+        String consultaFotos = "select array_to_json(array_agg(rf.*)) as fotos\n"
+                + "from rep_fotos rf\n"
+                + "where rf.id_repuesto = r.id\n"
+                + "and rf.estado = 0 ";
         String consulta = "select to_json(obj.*) as json\n"
                 + "from (\n"
                 + "SELECT \n"
                 + "	r.*,\n"
-                + "	r1.nombre AS nombreSubCat,\n"
-                + "    r2.nombre AS nombreCat,\n"
+                + "\n"
                 + "    (\n"
                 + "    	select array_to_json(array_agg(repde.*)) as detalle\n"
                 + "		from (\n"
                 + "				select * FROM rep_detalle rd\n"
                 + "				where rd.id_repuesto = r.id\n"
+                + "				and rd.estado = 0\n"
                 + "			) repde\n"
                 + "    ),(\n"
                 + "    	WITH RECURSIVE path AS (\n"
@@ -320,18 +455,13 @@ public class REPUESTO {
                 + "            AND ra.id_version = rav.id \n"
                 + "            AND rav.id_rep_auto_modelo = ram.id\n"
                 + "            AND ram.id_rep_auto_marca = rama.id\n"
-                + "            AND ( upper(ra.clave) LIKE upper('%%') OR\n"
-                + "	         upper(ra.anho) LIKE upper('%%') OR\n"
-                + "	        upper(ram.nombre) LIKE upper('%%') OR\n"
-                + "	         upper(rama.nombre) LIKE upper('%%') OR\n"
-                + "	          upper(rav.nombre) LIKE upper('%%'))\n"
                 + "	          order by(rama.nombre,ram.nombre,rav.nombre,ra.anho) ASC\n"
                 + "                ) AS ra\n"
                 + "		ON ra.id = rb.id_rep_auto\n"
+                //                + "		GROUP BY(ra.id)\n"
                 + "		) AS final\n"
                 + "    ) as vehiculos,\n"
-                + "("
-                + "select \n"
+                + "(select \n"
                 + "	array_to_json(array_agg(part.*)) as partes\n"
                 + "from (\n"
                 + "	select * \n"
@@ -340,16 +470,14 @@ public class REPUESTO {
                 + "		rep_posicion_esquema rpq\n"
                 + "	ON r1.id = rpq.id_repuesto WHERE \n"
                 + "		r1.id_padre = r.id\n"
-                + ") part"
-                + ") as partes \n"
+                + ") part) as partes \n"
+                + ", ( "+consultaFotos+" ) as fotos\n"
                 + "FROM \n"
-                + "	repuesto r, \n"
-                + "	rep_sub_categoria r1,\n"
-                + "	rep_categoria r2\n"
+                + "	repuesto r\n"
+                + "\n"
                 + "WHERE\n"
                 + "	r.id = ?\n"
-                + "	AND r1.id = r.id_rep_sub_categoria \n"
-                + "	AND r2.id = r1.id_rep_categoria\n"
+                + "\n"
                 + "	\n"
                 + ") obj";
         PreparedStatement ps = con.statamet(consulta);
@@ -395,11 +523,52 @@ public class REPUESTO {
                 } else {
                     exprecion += " WHERE ";
                 }
+
                 exprecion += "lower(ass::varchar) ~ E'" + palabras[i] + "'";
 
             }
         }
+        String consultaAlmacen = "select  al.nombre || ' - ' || als.nombre\n"
+                + "from \n"
+                + "cardex ca, \n"
+                + "cardex_movimiento cm,\n"
+                + "almacen_sec als,\n"
+                + "almacen al\n"
+                + "where \n"
+                + "ca.id = cm.id_cardex\n"
+                + "and cm.tipo = 1\n"
+                + "and ca.id_repuesto = rp.id\n"
+                + "and als.id = cm.id_almacen\n"
+                + "and als.id_almacen = al.id\n"
+                + "order by cm.fecha desc\n"
+                + "limit 1";
 
+        String consultaCantidad = "SELECT\n"
+                + "    COUNT(tabla.id_repuesto) AS cantidad\n"
+                + "FROM\n"
+                + "    repuesto repcount,\n"
+                + "    (\n"
+                + "        SELECT\n"
+                + "            ca.*,\n"
+                + "            (\n"
+                + "                SELECT\n"
+                + "                    cam.tipo\n"
+                + "                FROM\n"
+                + "                    cardex_movimiento cam\n"
+                + "                WHERE\n"
+                + "                    cam.id_cardex = ca.id\n"
+                + "                ORDER BY\n"
+                + "                    cam.fecha DESC\n"
+                + "                LIMIT 1) AS tipo\n"
+                + "        FROM\n"
+                + "            cardex ca\n"
+                + "        WHERE\n"
+                + "            ca.id_repuesto = rp.id) tabla\n"
+                + "WHERE\n"
+                + "    repcount.id = tabla.id_repuesto\n"
+                + "    AND tabla.tipo IN (1, 2)\n"
+                + "GROUP BY\n"
+                + "    repcount.id";
         String consulta = "WITH RECURSIVE recur AS (\n"
                 + "    SELECT\n"
                 + "        rcr.id,\n"
@@ -438,11 +607,9 @@ public class REPUESTO {
                 + "        SELECT\n"
                 + "            to_json(rp.*) AS repuesto,\n"
                 + "            rc.json::json AS categorias\n"
-                + "            ,(select array_to_json(array_agg(det.*)) from rep_detalle det where det.id_repuesto = rp.id ) as detalle"
-                + "            ,(SELECT COUNT(car.id_repuesto) FROM cardex car\n"
-                + "                WHERE car.id_repuesto = rp.id\n"
-                + "                AND car.estado = 0\n"
-                + "                GROUP BY (car.id_repuesto)) AS cantidad"
+                + "            ,(select array_to_json(array_agg(det.*)) from rep_detalle det where det.id_repuesto = rp.id and det.estado = 0) as detalle"
+                + "            ,(" + consultaCantidad + ") AS cantidad\n"
+                + "            ,(" + consultaAlmacen + ") AS almacen"
                 + "        FROM\n"
                 + "            repuesto rp,\n"
                 + "            recur rc\n"
@@ -450,7 +617,8 @@ public class REPUESTO {
                 + "            rp.id_rep_categoria = rc.id\n"
                 + "            AND rp.estado = 0) ass\n"
                 + exprecion
-                + "    LIMIT " + limit + " offset " + (pag * limit) + " ) asfinal\n"
+                + " order by ass.cantidad asc\n"
+                + "   LIMIT " + limit + " offset " + (pag * limit) + " ) asfinal\n"
                 + ") as data,\n"
                 + "(\n"
                 + "SELECT\n"
@@ -462,7 +630,7 @@ public class REPUESTO {
                 + "        SELECT\n"
                 + "            to_json(rp.*) AS repuesto,\n"
                 + "            rc.json::json AS categorias\n"
-                + "            ,(select array_to_json(array_agg(det.*)) from rep_detalle det where det.id_repuesto = rp.id ) as detalle"
+                + "            ,(select array_to_json(array_agg(det.*)) from rep_detalle det where det.id_repuesto = rp.id and det.estado = 0) as detalle"
                 + "        FROM\n"
                 + "            repuesto rp,\n"
                 + "            recur rc\n"
@@ -488,6 +656,363 @@ public class REPUESTO {
 
     }
 
+    public String getBusquedaGeneral(int pag, int limit, String busqueda) throws SQLException, JSONException {
+        String exprecion = "";
+
+        busqueda = busqueda.toUpperCase();
+        Pattern patronSUbCategori = Pattern.compile("((\\w){4,})");
+        Matcher encaja = patronSUbCategori.matcher(busqueda);
+        busqueda = "";
+        while (encaja.find()) {
+            busqueda += " " + encaja.group(1);
+        }
+        busqueda = busqueda.trim();
+
+        String[] palabras = busqueda.split(" ");
+        int index = 0;
+        if (busqueda.length() > 0) {
+            exprecion = "~*(";
+            for (int i = 0; i < palabras.length; i++) {
+                if (i > 0) {
+                    exprecion += "|";
+                }
+
+                exprecion += palabras[i];
+
+            }
+            exprecion += ")";
+        }
+
+        String consulta = "select array_to_json(array_agg(deta.*)) as data from (\n"
+                + "SELECT * FROM (\n"
+                + "    select \n"
+                + "(        \n"
+                + "    select ( COALESCE((\n"
+                + "    select SUM(t.prioridad)\n"
+                + "    from (\n"
+                + "        \n"
+                + "            SELECT (COUNT(regexp_matches) * (length(regexp_matches::CHARACTER VARYING)-2+5)) as prioridad\n"
+                + "                 FROM ( \n"
+                + "                VALUES (UPPER(result.repuesto::CHARACTER VARYING), ?) \n"
+                + "            ) AS t(str, replacestr) \n"
+                + "        CROSS JOIN LATERAL\n"
+                + "            regexp_matches(str, replacestr,'g')\n"
+                + "            group by (regexp_matches)\n"
+                + "    ) t\n"
+                + "    ),0))  \n"
+                + ") as reg_repuesto,\n"
+                + "result.repuesto,\n"
+                + "(\n"
+                + "    select ( COALESCE((\n"
+                + "    select SUM(t.prioridad)\n"
+                + "    from (\n"
+                + "            SELECT (COUNT(regexp_matches) * length(regexp_matches::CHARACTER VARYING)-2) as prioridad\n"
+                + "        FROM ( \n"
+                + "                VALUES (UPPER(result.rep_detalle::CHARACTER VARYING), ?) \n"
+                + "            ) AS t(str, replacestr) \n"
+                + "        CROSS JOIN LATERAL\n"
+                + "            regexp_matches(str, replacestr,'g')\n"
+                + "            group by (regexp_matches)\n"
+                + "    ) t\n"
+                + "    ),0))  \n"
+                + ") as reg_rep_detalle,\n"
+                + "result.rep_detalle,\n"
+                + "(\n"
+                + "       select ( COALESCE((\n"
+                + "    select SUM(t.prioridad)\n"
+                + "    from (\n"
+                + "            SELECT (COUNT(regexp_matches) * length(regexp_matches::CHARACTER VARYING)-2) as prioridad\n"
+                + "        FROM ( \n"
+                + "                VALUES (UPPER(result.rep_categoria_rec::CHARACTER VARYING), ?) \n"
+                + "            ) AS t(str, replacestr) \n"
+                + "        CROSS JOIN LATERAL\n"
+                + "            regexp_matches(str, replacestr,'g')\n"
+                + "            group by (regexp_matches)\n"
+                + "    ) t\n"
+                + "    ),0))  \n"
+                + ") as reg_rep_categoria_rec,\n"
+                + "result.rep_categoria_rec,\n"
+                + "result.autos\n"
+                + "from(\n"
+                + "        SELECT\n"
+                + "            (\n"
+                + "                SELECT ('{ ' || string_agg('\"' || key || '\" : ' || value, ', ') || ' }')::JSON FROM (\n"
+                + "                SELECT * FROM json_each(to_json(repuesto.*)) WHERE key <> 'clave') r\n"
+                + "            )\n"
+                + "             as repuesto,   \n"
+                + "            rep_detalle.rep_detalle,\n"
+                + "            rep_categoria_rec.json as rep_categoria_rec,\n"
+                + "            auto.auto as autos\n"
+                + "        FROM repuesto repuesto LEFT JOIN\n"
+                + "        (\n"
+                + "                SELECT id_repuesto, array_to_json(array_agg(ra.*)) as auto\n"
+                + "                FROM\n"
+                + "                    rep_to_rep_auto rtra,\n"
+                + "                    (\n"
+                + "                        SELECT \n"
+                + "                            rep_auto.id,\n"
+                + "                            to_json(rep_auto.*) as rep_auto,\n"
+                + "                            to_json(rep_auto_version.*) as rep_auto_version,\n"
+                + "                            to_json(rep_auto_modelo.*) as rep_auto_modelo,\n"
+                + "                            to_json(rep_auto_marca.*) as rep_auto_marca\n"
+                + "                        FROM \n"
+                + "                            rep_auto rep_auto,\n"
+                + "                            rep_auto_version rep_auto_version,\n"
+                + "                            rep_auto_modelo rep_auto_modelo,\n"
+                + "                            rep_auto_marca rep_auto_marca\n"
+                + "                        WHERE\n"
+                + "                            rep_auto.id_version = rep_auto_version.id\n"
+                + "                        AND rep_auto_version.id_rep_auto_modelo = rep_auto_modelo.id\n"
+                + "                        AND rep_auto_modelo.id_rep_auto_marca = rep_auto_marca.id\n"
+                + "                    )ra\n"
+                + "                WHERE rtra.id_rep_auto = ra.id\n"
+                + "                group by rtra.id_repuesto \n"
+                + "            ) auto ON repuesto.id = auto.id_repuesto\n"
+                + "            LEFT JOIN\n"
+                + "           \n"
+                + "            (\n"
+                + "                SELECT \n"
+                + "                    id_repuesto, array_to_json(array_agg(rep_detalle.*)) as rep_detalle\n"
+                + "                FROM\n"
+                + "                    rep_detalle rep_detalle\n"
+                + "                group by rep_detalle.id_repuesto \n"
+                + "\n"
+                + "            ) rep_detalle ON  repuesto.id = rep_detalle.id_repuesto\n"
+                + "            LEFT JOIN\n"
+                + "            (\n"
+                + "                WITH RECURSIVE recur AS (\n"
+                + "                            SELECT\n"
+                + "                                rcr.id,\n"
+                + "                                rcr.id_padre,\n"
+                + "                                1 AS lvl,\n"
+                + "                                (\n"
+                + "                                    SELECT\n"
+                + "                                        ('[ ' || to_json(rcr.*) || ' ]') AS json)::CHARACTER VARYING\n"
+                + "                                FROM\n"
+                + "                                    rep_categoria_rec rcr\n"
+                + "                                WHERE\n"
+                + "                                    rcr.id_padre IS NULL\n"
+                + "                                UNION\n"
+                + "                                SELECT\n"
+                + "                                    e.id,\n"
+                + "                                    e.id_padre,\n"
+                + "                                    s.lvl + 1, (\n"
+                + "                                        SELECT\n"
+                + "                                            ('[ ' || string_agg(value::CHARACTER VARYING, ', ') || ' ]')::JSON FROM (\n"
+                + "                                                SELECT\n"
+                + "                                                    * FROM json_array_elements(s.json::json)\n"
+                + "                                                UNION ALL\n"
+                + "                                                SELECT\n"
+                + "                                                    to_json(e.*)) t)::CHARACTER VARYING\n"
+                + "                                FROM\n"
+                + "                                    rep_categoria_rec e\n"
+                + "                                    INNER JOIN recur s ON s.id = e.id_padre\n"
+                + "                        )\n"
+                + "                        select * from recur\n"
+                + "            ) rep_categoria_rec\n"
+                + "        ON  repuesto.id_rep_categoria= rep_categoria_rec.id \n"
+                + "         \n"
+                + ") result\n"
+                + "\n"
+                + ") subq where (subq.reg_repuesto > 0 or subq.reg_rep_detalle>0 or subq.reg_rep_categoria_rec>0)\n"
+                + "order by subq.reg_repuesto desc, subq.reg_rep_detalle desc,subq.reg_rep_categoria_rec desc\n"
+                + "limit " + limit + " offset " + pag + "\n"
+                + " ) deta";
+        PreparedStatement ps = con.statamet(consulta);
+        ps.setString(1, exprecion);
+        ps.setString(2, exprecion);
+        ps.setString(3, exprecion);
+//        ps.setString(4, exprecion);
+
+        ResultSet rs = ps.executeQuery();
+        String resp = "error";
+        if (rs.next()) {
+            resp = rs.getString("data");
+        }
+        ps.close();
+        rs.close();
+        return resp;
+
+    }
+    public String getBusquedaGeneralTienda(int pag, int limit, String busqueda) throws SQLException, JSONException {
+        String exprecion = "";
+
+        busqueda = busqueda.toUpperCase();
+        Pattern patronSUbCategori = Pattern.compile("((\\w){4,})");
+        Matcher encaja = patronSUbCategori.matcher(busqueda);
+        busqueda = "";
+        while (encaja.find()) {
+            busqueda += " " + encaja.group(1);
+        }
+        busqueda = busqueda.trim();
+
+        String[] palabras = busqueda.split(" ");
+        int index = 0;
+        if (busqueda.length() > 0) {
+            exprecion = "~*(";
+            for (int i = 0; i < palabras.length; i++) {
+                if (i > 0) {
+                    exprecion += "|";
+                }
+
+                exprecion += palabras[i];
+
+            }
+            exprecion += ")";
+        }
+
+        String consulta = "select array_to_json(array_agg(deta.*)) as data from (\n"
+                + "SELECT * FROM (\n"
+                + "    select \n"
+                + "(        \n"
+                + "    select ( COALESCE((\n"
+                + "    select SUM(t.prioridad)\n"
+                + "    from (\n"
+                + "        \n"
+                + "            SELECT (COUNT(regexp_matches) * (length(regexp_matches::CHARACTER VARYING)-2+5)) as prioridad\n"
+                + "                 FROM ( \n"
+                + "                VALUES (UPPER(result.repuesto::CHARACTER VARYING), ?) \n"
+                + "            ) AS t(str, replacestr) \n"
+                + "        CROSS JOIN LATERAL\n"
+                + "            regexp_matches(str, replacestr,'g')\n"
+                + "            group by (regexp_matches)\n"
+                + "    ) t\n"
+                + "    ),0))  \n"
+                + ") as reg_repuesto,\n"
+                + "result.repuesto,\n"
+                + "(\n"
+                + "    select ( COALESCE((\n"
+                + "    select SUM(t.prioridad)\n"
+                + "    from (\n"
+                + "            SELECT (COUNT(regexp_matches) * length(regexp_matches::CHARACTER VARYING)-2) as prioridad\n"
+                + "        FROM ( \n"
+                + "                VALUES (UPPER(result.rep_detalle::CHARACTER VARYING), ?) \n"
+                + "            ) AS t(str, replacestr) \n"
+                + "        CROSS JOIN LATERAL\n"
+                + "            regexp_matches(str, replacestr,'g')\n"
+                + "            group by (regexp_matches)\n"
+                + "    ) t\n"
+                + "    ),0))  \n"
+                + ") as reg_rep_detalle,\n"
+                + "result.rep_detalle,\n"
+                + "(\n"
+                + "       select ( COALESCE((\n"
+                + "    select SUM(t.prioridad)\n"
+                + "    from (\n"
+                + "            SELECT (COUNT(regexp_matches) * length(regexp_matches::CHARACTER VARYING)-2) as prioridad\n"
+                + "        FROM ( \n"
+                + "                VALUES (UPPER(result.rep_categoria_rec::CHARACTER VARYING), ?) \n"
+                + "            ) AS t(str, replacestr) \n"
+                + "        CROSS JOIN LATERAL\n"
+                + "            regexp_matches(str, replacestr,'g')\n"
+                + "            group by (regexp_matches)\n"
+                + "    ) t\n"
+                + "    ),0))  \n"
+                + ") as reg_rep_categoria_rec,\n"
+                + "result.rep_categoria_rec,\n"
+                + "result.autos\n"
+                + "from(\n"
+                + "        SELECT\n"
+                + "            (\n"
+                + "                SELECT ('{ ' || string_agg('\"' || key || '\" : ' || value, ', ') || ' }')::JSON FROM (\n"
+                + "                SELECT * FROM json_each(to_json(repuesto.*)) WHERE key <> 'clave') r\n"
+                + "            )\n"
+                + "             as repuesto,   \n"
+                + "            rep_detalle.rep_detalle,\n"
+                + "            rep_categoria_rec.json as rep_categoria_rec,\n"
+                + "            auto.auto as autos\n"
+                + "        FROM repuesto repuesto LEFT JOIN\n"
+                + "        (\n"
+                + "                SELECT id_repuesto, array_to_json(array_agg(ra.*)) as auto\n"
+                + "                FROM\n"
+                + "                    rep_to_rep_auto rtra,\n"
+                + "                    (\n"
+                + "                        SELECT \n"
+                + "                            rep_auto.id,\n"
+                + "                            to_json(rep_auto.*) as rep_auto,\n"
+                + "                            to_json(rep_auto_version.*) as rep_auto_version,\n"
+                + "                            to_json(rep_auto_modelo.*) as rep_auto_modelo,\n"
+                + "                            to_json(rep_auto_marca.*) as rep_auto_marca\n"
+                + "                        FROM \n"
+                + "                            rep_auto rep_auto,\n"
+                + "                            rep_auto_version rep_auto_version,\n"
+                + "                            rep_auto_modelo rep_auto_modelo,\n"
+                + "                            rep_auto_marca rep_auto_marca\n"
+                + "                        WHERE\n"
+                + "                            rep_auto.id_version = rep_auto_version.id\n"
+                + "                        AND rep_auto_version.id_rep_auto_modelo = rep_auto_modelo.id\n"
+                + "                        AND rep_auto_modelo.id_rep_auto_marca = rep_auto_marca.id\n"
+                + "                    )ra\n"
+                + "                WHERE rtra.id_rep_auto = ra.id\n"
+                + "                group by rtra.id_repuesto \n"
+                + "            ) auto ON repuesto.id = auto.id_repuesto\n"
+                + "            LEFT JOIN\n"
+                + "           \n"
+                + "            (\n"
+                + "                SELECT \n"
+                + "                    id_repuesto, array_to_json(array_agg(rep_detalle.*)) as rep_detalle\n"
+                + "                FROM\n"
+                + "                    rep_detalle rep_detalle\n"
+                + "                group by rep_detalle.id_repuesto \n"
+                + "\n"
+                + "            ) rep_detalle ON  repuesto.id = rep_detalle.id_repuesto\n"
+                + "            LEFT JOIN\n"
+                + "            (\n"
+                + "                WITH RECURSIVE recur AS (\n"
+                + "                            SELECT\n"
+                + "                                rcr.id,\n"
+                + "                                rcr.id_padre,\n"
+                + "                                1 AS lvl,\n"
+                + "                                (\n"
+                + "                                    SELECT\n"
+                + "                                        ('[ ' || to_json(rcr.*) || ' ]') AS json)::CHARACTER VARYING\n"
+                + "                                FROM\n"
+                + "                                    rep_categoria_rec rcr\n"
+                + "                                WHERE\n"
+                + "                                    rcr.id_padre IS NULL\n"
+                + "                                UNION\n"
+                + "                                SELECT\n"
+                + "                                    e.id,\n"
+                + "                                    e.id_padre,\n"
+                + "                                    s.lvl + 1, (\n"
+                + "                                        SELECT\n"
+                + "                                            ('[ ' || string_agg(value::CHARACTER VARYING, ', ') || ' ]')::JSON FROM (\n"
+                + "                                                SELECT\n"
+                + "                                                    * FROM json_array_elements(s.json::json)\n"
+                + "                                                UNION ALL\n"
+                + "                                                SELECT\n"
+                + "                                                    to_json(e.*)) t)::CHARACTER VARYING\n"
+                + "                                FROM\n"
+                + "                                    rep_categoria_rec e\n"
+                + "                                    INNER JOIN recur s ON s.id = e.id_padre\n"
+                + "                        )\n"
+                + "                        select * from recur\n"
+                + "            ) rep_categoria_rec\n"
+                + "        ON  repuesto.id_rep_categoria= rep_categoria_rec.id \n"
+                + "         \n"
+                + ") result\n"
+                + "\n"
+                + ") subq where (subq.reg_repuesto > 0 or subq.reg_rep_detalle>0 or subq.reg_rep_categoria_rec>0)\n"
+                + "order by subq.reg_repuesto desc, subq.reg_rep_detalle desc,subq.reg_rep_categoria_rec desc\n"
+                + "limit " + limit + " offset " + pag + "\n"
+                + " ) deta";
+        PreparedStatement ps = con.statamet(consulta);
+        ps.setString(1, exprecion);
+        ps.setString(2, exprecion);
+        ps.setString(3, exprecion);
+//        ps.setString(4, exprecion);
+
+        ResultSet rs = ps.executeQuery();
+        String resp = "error";
+        if (rs.next()) {
+            resp = rs.getString("data");
+        }
+        ps.close();
+        rs.close();
+        return resp;
+
+    }
+
     public String getPaginationJSON2(int pag, int limit, String busqueda) throws SQLException, JSONException {
         String consultaCount = "select count(re.id) \n"
                 + "			FROM repuesto re\n"
@@ -505,10 +1030,19 @@ public class REPUESTO {
                 + "				upper(ca.subcategoria) like upper('%" + busqueda + "%') or\n"
                 + "				upper(ca.categoria) like upper('%" + busqueda + "%'))";
 
-        String consultaArray = "SELECT rep.* , rsc.nombre AS subcategoria, rc.nombre AS categoria, (SELECT COUNT(car.id_repuesto) FROM cardex car\n"
-                + "                WHERE car.id_repuesto = rep.id\n"
-                + "                AND car.estado = 0\n"
-                + "                GROUP BY (car.id_repuesto)) AS cantidad \n"
+        String consultaCantidad = "select COUNT(tabla.id_repuesto) as cantidad\n"
+                + "from repuesto repcount,(\n"
+                + "    select car.id, car.id_repuesto, MAX(carm.fecha), carm.tipo\n"
+                + "    from cardex car, cardex_movimiento carm\n"
+                + "    where car.id_repuesto = rep.id\n"
+                + "    and car.id = carm.id_cardex\n"
+                + "    group by car.id, carm.id, car.id_repuesto\n"
+                + ") tabla\n"
+                + "where repcount.id = tabla.id_repuesto\n"
+                + "and tabla.tipo IN (1,2)\n"
+                + "group by repcount.id";
+
+        String consultaArray = "SELECT rep.* , rsc.nombre AS subcategoria, rc.nombre AS categoria, (" + consultaCantidad + ") AS cantidad \n"
                 + "                FROM repuesto rep, rep_sub_categoria rsc, rep_categoria rc\n"
                 + "                WHERE rep.id_rep_sub_categoria = rsc.id AND rep.estado = 0 AND  rsc.id_rep_categoria =  rc.id"
                 + "			and (upper(rep.codigo) like upper('%" + busqueda + "%') or\n"
@@ -582,7 +1116,7 @@ public class REPUESTO {
     public String getTop8() throws SQLException, JSONException {
 
         String consulta = "SELECT array_to_json(array_agg(arr.*)) AS json FROM (\n"
-                + "SELECT rep2.*, tblrsc.nombre AS nombresubcat, tblrc.nombre AS nombrecat,\n"
+                + "SELECT rep2.* ,\n"
                 + "(SELECT COUNT(car.id_repuesto) FROM cardex car\n"
                 + "                                WHERE car.id_repuesto = rep2.id\n"
                 + "                                AND car.estado = 0\n"
@@ -599,11 +1133,7 @@ public class REPUESTO {
                 + "        WHERE r.estado = 0\n"
                 + "        ORDER BY cant DESC\n"
                 + "        LIMIT 8 \n"
-                + ") AS rep2,\n"
-                + "     rep_sub_categoria tblrsc,\n"
-                + "     rep_categoria tblrc\n"
-                + "WHERE rep2.id_rep_sub_categoria = tblrsc.id\n"
-                + "AND tblrc.id = tblrsc.id_rep_categoria\n"
+                + ") AS rep2\n"
                 + "ORDER BY cant DESC"
                 + ") arr";
         PreparedStatement ps = con.statamet(consulta);

@@ -6,15 +6,15 @@
         <title>Servisis</title>
         <meta charset="utf-8">
 
-
+        <link rel="icon" href="./img/logofullpart.png">
         <meta name="keywords" content="responsive html5 template, e-commerce, shop, bootstrap 3.0, css, jquery, flat, modern" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
         <link href="plugin/bootstrap-4.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <link href="plugin/bootstrap-4.1.1/css/bootstrap-grid.min.css" rel="stylesheet" type="text/css"/>
-           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
         <link href="css/styles.css" rel="stylesheet" type="text/css"/>
-
+        <link href="css/carrusel.css" rel="stylesheet" type="text/css"/>
         <script src="js/libs/jquery-1.11.1.min.js" type="text/javascript"></script>
         <script src="js/libs/jquery-ui-1.10.4.custom.min.js"></script>
         <script src="js/plugins/bootstrap.min.js"></script>
@@ -31,9 +31,9 @@
 
             <!--Breadcrumbs-->
             <ol class="breadcrumb">
-                <li><a href="index-2.html">Home</a></li>
-                <li><a href="shop-filters-left-3cols.html">Shop - filters left 3 cols</a></li>
-                <li>Shop - single item v1</li>
+                <!--<li><a href="index-2.html">Home</a></li>-->
+                <!--<li><a href="shop-filters-left-3cols.html">Shop - filters left 3 cols</a></li>-->
+                <!--<li>Shop - single item v1</li>-->
             </ol><!--Breadcrumbs Close-->
 
             <!--Shopping Cart Message-->
@@ -63,21 +63,21 @@
                             <h4 id="codigo">Codigo</h4>
                             <h4 id="categoria">Categoria - SubCategoria</h4>
 
-                            <div class="rate">
-                                <span class="active"></span>
-                                <span class="active"></span>
-                                <span class="active"></span>
-                                <span></span>
-                                <span></span>
-                            </div>
+                            <!--                            <div class="rate">
+                                                            <span class="active"></span>
+                                                            <span class="active"></span>
+                                                            <span class="active"></span>
+                                                            <span></span>
+                                                            <span></span>
+                                                        </div>-->
                             <!--<div class="old-price">815,00 $</div>-->
                             <div class="price" id="precio">00,00 Bs.</div>
                             <div class="buttons group">
-                             
-                   
-                                <a  class="btn btn-success btn-sm" href="https://api.whatsapp.com/send?phone=59175395848&text=hola,%20¿qué%20tal%20estás?"> <i class="fa fa-whatsapp" style="line-height: 0;"></i>WhatsApp</a>
+
+
+                                <a  class="btn btn-success btn-sm" id="whatsapp" href=""> <i class="fa fa-whatsapp" ></i>WhatsApp</a>
                                 <a class="btn btn-primary btn-sm" id="addItemToCart" href="#"><i class="icon-shopping-cart"></i>Agregar al carrito</a>
-                               
+
 
 
                             </div>
@@ -87,17 +87,17 @@
                                 <div class="col-lg-4 col-md-4 col-sm-5">
                                     <h4>Compartir</h4>
                                     <div class="social-links">
-                                        
+
                                         <a href="#"><i class="fa fa-facebook-square"></i></a>
                                     </div>
                                 </div>
 
                             </div>
-                            <div class="promo-labels">
-                                <div data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."><i class="fa fa-truck"></i>Free delivery</div>
-                                <div data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."><i class="fa fa-space-shuttle"></i>Deliver even on Mars</div>
-                                <div data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."><i class="fa fa-shield"></i>Safe Buy</div>
-                            </div>
+                            <!--                            <div class="promo-labels">
+                                                            <div data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."><i class="fa fa-truck"></i>Free delivery</div>
+                                                            <div data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."><i class="fa fa-space-shuttle"></i>Deliver even on Mars</div>
+                                                            <div data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."><i class="fa fa-shield"></i>Safe Buy</div>
+                                                        </div>-->
                         </div>
                     </div>
                 </div>
@@ -109,6 +109,7 @@
                 <ul class="nav nav-tabs">
                     <li ><a href="#specs" data-toggle="tab">Vehiculos</a></li>
                     <li class="active"><a href="#descr" data-toggle="tab">Partes</a></li>
+                    <li><a href="#fotos" data-toggle="tab">Fotos</a></li>
 
                 </ul>
                 <div class="tab-content">
@@ -232,6 +233,40 @@
 
                         </div>
                     </div>
+                    <div class="tab-pane fade in active" id="fotos">
+
+                        <div class="row " style="border-radius: 15px 15px 15px 15px; padding: 45px; justify-content: 'center'; text-align: 'center'; ">
+
+                            <div id="myCarouselCustom" class="carousel slide col-12" data-ride="carousel">
+                                <!-- Indicators -->
+                                <ol class="carousel-indicators" id='carruselInd'>
+
+
+
+                                </ol>
+
+                                <!-- Wrapper for slides -->
+                                <div class="carousel-inner" id='carruselPerfil'>
+
+                                </div>
+
+
+
+
+
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Tab3 (Reviews)-->
+
+                </div>
+
             </section><!--Tabs Widget Close-->
 
 

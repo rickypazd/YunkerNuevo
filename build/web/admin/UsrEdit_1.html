@@ -1,0 +1,120 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Servisis</title>
+        <meta name="description" content="Servisis">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap-grid.min.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+        <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+
+        <script src="plugin/jquery/jquery.min.js" type="text/javascript"></script>
+        <script src="js/eventos/navBar.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/popper.min.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/bootstrap.min.js" type="text/javascript"></script>
+
+   
+        <script src="assets/js/matchHeigh.js" type="text/javascript"></script>
+        <script src="assets/js/main.js"></script>
+        <script src="js/eventos/verifySession.js" type="text/javascript"></script>
+     <link href="plugin/fileimput/css/fileinput.min.css" rel="stylesheet" type="text/css"/>
+        <link href="plugin/fileimput/themes/explorer-fa/theme.min.css" rel="stylesheet" type="text/css"/>
+        <script src="plugin/fileimput/js/plugins/sortable.min.js" type="text/javascript"></script>
+        <script src="plugin/fileimput/js/fileinput.min.js" type="text/javascript"></script>
+        <script src="plugin/fileimput/js/locales/es.js" type="text/javascript"></script>
+        <script src="plugin/fileimput/themes/explorer-fa/theme.min.js" type="text/javascript"></script>
+        <script src="plugin/fileimput/themes/fa/theme.min.js" type="text/javascript"></script>
+
+        <script src="js/Usr/UsrEdit.js" type="text/javascript"></script>
+        <script src="js/eventos/load.js" type="text/javascript"></script>
+
+    </head>
+
+    <body data-permisourl="editar_usuario">
+        <div id="right-panel" class="right-panel">
+
+            <div class="content">
+                <!-- Animated -->
+                <button class="btn btn-outline-danger" onclick="window.history.back();">Volver</button>
+                <div class="animated fadeIn">
+                    <h1>Editar repuesto.</h1>
+
+                    <div class="container">
+
+
+                        <form class="col-md-6">
+                            <div class="form-group">
+                                <label for="cu_nombre">Codigo: </label>
+                                <input type="text" class="form-control" id="cu_nombre" placeholder="Codigo">
+                            </div>
+                            <div class="form-group">
+                                <label for="cu_ap_pa">Nombre: </label>
+                                <input type="text" class="form-control" id="cu_ap_pa" placeholder="Nombre">
+                            </div>
+                            <div class="form-group">
+                                <label for="cu_ap_ma">Precio: </label>
+                                <input type="text" class="form-control" id="cu_ap_ma" placeholder="Precio">
+                            </div>
+                           
+
+                        </form>
+
+                        <div class="row d-flex justify-content-center">
+                            <button type="button" class="btn btn-primary" onclick="ok_crear();" >
+                                EDITAR
+                            </button>
+                        </div>
+                    </div>
+                </div>           
+                <!-- Footer -->
+
+                <!-- /.site-footer -->
+            </div>
+        </div>
+    
+    <div class="modal" id="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">SUBIR FOTO</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+
+
+                        <form method="POST" action="admin/adminController" id="submitform" enctype="multipart/form-data">
+                            <input type="hidden" name="evento" value="subirFoto_usuario"/>
+                            <input type="hidden" id="id_usr" name="id" value="0"/>
+                            <input type="hidden" name="TokenAcceso" value="servi12sis3"/>
+
+
+
+                            <div class="file-loading">
+                                <input id="file-0d" name="archibo" class="file" type="file" accept="image/*">
+                            </div>
+
+                            <div class="form-group" style="text-align: center; margin-top: 20px;">
+
+                                <button class="btn btn-primary">SUBIR</button>
+
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

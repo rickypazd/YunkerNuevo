@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Factura</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+            body{
+                border: 0;
+                margin: 0;
+                padding: 0;
+
+            }
+            hr{
+                margin: 4px;
+                border-top: 1px dashed;
+            }
+            .hr2{
+                margin: 4px;
+                border-top: 1px solid;
+            }
+            p{
+                padding: 0;
+                margin: 4px;
+            }
+            .contenedor{
+                background: #666;
+                width: 100%;
+                min-height:  100vh;
+                text-align: center;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            .facturaContent{
+                margin-top: 8px;
+                padding: 8px;
+                display: inline-block;
+                background: #fff;
+                width: 300px;
+
+            } 
+            .datos{
+                font-size: 14px;
+                text-align: initial;
+                font-weight: 900;
+            }
+            .productos{
+                text-align: initial;
+
+            }
+            .datos span{
+                font-weight: 300;
+            }
+            .detalle{
+
+                display: inline-block;
+                width: 70%;
+
+                /*background: #000;*/
+            }
+            .detalle p{
+                display: block;
+                width: 100%;
+            }
+            .importe{
+                display: inline-flex;
+                width: 28%;
+
+                text-align: center;
+                /*background: #f00;*/
+            }
+            .importe p {
+                display: block;
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="contenedor">
+
+            <div id="facturaid" class="facturaContent">
+
+                <hr class='hr2'> 
+                <hr>
+                <p style="font-weight: 900;">FULL PARTS</p>  
+
+                <p id='tituloCompro'>Comprovante de </p>  
+                <hr>
+
+                <div class="datos">
+                    <p>Fecha: <span id="inpFecha">00/00/0000 00:00</span></p>  
+                    <p >Codigo: <span id="inpCodigoCompra">----</span></p>  
+                    <p>Vendedor: <span id="inVendedor"> Sin Nombre</span></p>  
+                    <hr>
+
+                    <p>Cliente</p>  
+                    <p>NIT: <span id="inpNit">----</span></p>  
+                    <p>Nombre: <span id="inpProve"> Sin Nombre</span></p>  
+
+
+                </div>
+                <hr class='hr2'> 
+                <hr>
+                <p style="font-weight: 900;">Productos</p>  
+                <hr>
+                <div class="productos">
+                    <div id="data1">
+                        <div class="detalle" style="font-size: 12px;">
+                            <p >Detalle</p>   
+                            <p>Cant. x Precio Unit.</p>  
+                        </div>
+                        <div class="importe" style="font-size: 12px;">
+                            <p>Importe</p>
+
+                        </div>
+                        <hr class='hr2'> 
+                        <!--<hr>-->
+                    </div>
+                    <hr class='hr2'> 
+                    <div class="detalle" style="font-weight: 900;">
+                        <p >Total a pagar: </p>   
+
+                    </div>
+                    <div class="importe" >
+                        <p id="ptotal" style="font-weight: 900;">0 Bs.</p>
+
+                    </div>
+
+                    <hr class='hr2'> 
+                    <hr>
+
+                    <!--<hr>-->
+
+
+                </div>
+
+                <div id="PlanCuenta" style="display: none">
+                    <p style="font-weight: 900;">Plan de pagos</p>  
+                    <hr>
+                    <div id="detallePlanCuenta">
+
+                    </div>
+
+                    <hr class='hr2'> 
+                    <hr>
+                </div>
+
+                <p style="font-weight: 900; font-size: 14px;">Full Parts</p>  
+                <p style="font-weight: 300; font-size: 12px;">http://fullparts-online.com</p>  
+
+                <p style="font-weight: 300; font-size: 12px;">Muchas gracias por su compra.</p>  
+                <hr>
+
+                <p style="font-weight: 300; font-size: 12px;">(Toda devolución dentro de las 24hras, no incluye repuestos electrónicos).</p>  
+                <hr>
+                <hr class='hr2'> 
+
+            </div>
+        </div>
+        <script src="plugin/jquery/jquery.min.js" type="text/javascript"></script>
+        <script type="text/javascript">
+
+            var url = "comprasController";
+            $(document).ready(function () {
+                var id = getQueryVariable("id");
+                var tipe = getQueryVariable("tipe");
+                $("#tituloCompro").html("Comprovante de " + tipe);
+
+
+                $.post(url, {TokenAcceso: "servi12sis3", evento: "get_" + tipe + "_id", id: id}, function (resp) {
+
+                    if (resp != null) {
+                        var objec = $.parseJSON(resp);
+                        if (objec.estado != "1") {
+                            alert(objec.mensaje);
+                        } else {
+                            var obj = $.parseJSON(objec.resp);
+                            $("#inpCodigoCompra").html(obj.codigo);
+                            $("#inpFecha").html(obj.fecha.substring(0, 10));
+                            $("#inpNit").html(obj.nit);
+                            $("#inpProve").html(obj.nombre_proveedor || obj.nombre_cliente);
+                            $("#ptotal").html(obj.total + " Bs.");
+                            $("#inVendedor").html(obj.administrador[0].nombre + " " + obj.administrador[0].apellido_pa + " " + obj.administrador[0].apellido_ma);
+//                            $("#CantArt").html("(" + obj.detalle.length + ")");
+
+
+//                            listaCuotas(obj);
+                            ListaDetalle(obj);
+
+                        }
+                    }
+
+                });
+
+
+
+            });
+
+            function ListaDetalle(obj) {
+
+
+                var arr = obj.detalle;
+                // $("#resultados").html("(" + arr.length + ")");
+                var total = 0;
+                $.each(arr, function (i, obj) {
+                    total += obj.sub_total;
+                    var html = " <div class='detalle'>";
+                    html += "    <p style='font-size:14px;'>" + obj.id_articulo + " - " + obj.nombre + "</p>  ";
+                    html += "    <p>" + obj.cantidad + " x " + obj.precio + " Bs.</p>   ";
+                    if (obj.descuento > 0) {
+                        html += "    <p>- " + obj.descuento + " % Desc.</p>   ";
+
+                    }
+                    html += " </div>";
+                    html += " <div class='importe'>";
+                    html += "   <p>" + obj.sub_total + " Bs. </p>";
+                    html += " </div> <hr>";
+                    $("#data1").append(html);
+                    if (obj.devoluciones[0]) {
+                        $.each(obj.devoluciones, function (index, dev) {
+                            total += dev.sub_total;
+                            var html = " <div class='detalle'>";
+                            html += "    <p style='font-size:14px;'>DEVOLUCION</p>  ";
+                            html += "    <p>" + dev.cantidad + " x " + dev.precio + " Bs.</p>   ";
+                            html += " </div>";
+                            html += " <div class='importe'>";
+                            html += "   <p>" + dev.sub_total + " Bs. </p>";
+                            html += " </div> <hr>";
+                            $("#data1").append(html);
+                        })
+                    }
+
+
+                });
+                $("#ptotal").html(total.toFixed(2) + " Bs.");
+
+                listaCuotas(total, obj);
+
+            }
+
+
+            function imprimirqr() {
+
+
+                window.print();
+//    $("#p_nombre").printArea();
+            }
+
+
+            function listaCuotas(total, obj) {
+
+
+                var data = obj.cuotas;
+                var value = data.length || 1;
+                var monto = 0;
+                if (value <= 0) {
+                    value = 1;
+                    $("#PlanCuenta").css("display", "none");
+                } else if (value > 1) {
+                    $("#PlanCuenta").css("display", "");
+                    var html = "";
+
+
+
+
+                    for (var i = 0; i < value; i++) {
+                        html += "<div style=' width:100%; text-align:start;'>";
+                        html += "                            <div>                                                                                                                ";
+
+                        html += "# " + data[i].numero
+                        html += "   -   " + data[i].monto.toFixed(2) + " Bs.";
+
+                        if (data[i].fecha_on) {
+                            html += "                           <span style='float:right;'>" + data[i].monto.toFixed(2) + " Bs.</span>";
+                            monto += data[i].monto;
+                        }
+                        html += "                           </div>";
+                        html += "                           <div class='col-3' style='text-align: center'>";
+                        html += " F.Plazo: " + data[i].fecha;
+
+                        if (!data[i].fecha_on) {
+                            html += "                              </br> <b>Pendiente</b>";
+                        } else {
+                            html += "                               </br>F.Pago: " + data[i].fecha_on.substring(0, 10);
+
+                        }
+
+                        html += "                           </div>";
+
+                        html += "                       </div>";
+                    }
+                    html += "<div style=' width:100%; text-align:start;'> <hr/>";
+                    html += " <div class='detalle' style='font-weight: 900;'>";
+                    html += "        <p >Total pagado: </p>   ";
+
+                    html += "    </div>";
+                    html += "    <div class='importe' >";
+                    html += "        <p style='font-weight: 900;'>" + monto.toFixed(2) + " Bs.</p>";
+
+                    html += "    </div>";
+                    html += "                       </div>";
+                    html += "<div style=' width:100%; text-align:start;'> <hr/>";
+                    html += " <div class='detalle' style='font-weight: 900;'>";
+
+                    if ((total - monto) == 0) {
+                        html += "        <p style='font-weight: 900;'>Completado.</p>";
+                    } else {
+                        html += "        <p >Total deuda: </p>   ";
+
+                        html += "    </div>";
+                        html += "    <div class='importe' >";
+                        html += "        <p style='font-weight: 900;'>" + (total - monto).toFixed(2) + " Bs.</p>";
+                        html += "    </div>";
+                    }
+
+
+
+                    html += "                       </div>";
+                    $("#detallePlanCuenta").html(html);
+
+                } else {
+                    $("#PlanCuenta").css("display", "none");
+                }
+
+//                $("#detallePlanCuenta").append(html);
+//                imprimirqr();
+            }
+
+            function getQueryVariable(varia) {
+                var query = window.location.search.substring(1);
+                var vars = query.split("&");
+                for (var i = 0; i < vars.length; i++) {
+                    var pair = vars[i].split("=");
+                    if (pair[0] == varia) {
+                        return pair[1];
+                    }
+                }
+                return (false);
+            }
+
+        </script>
+    </body>
+</html>

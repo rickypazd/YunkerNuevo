@@ -161,6 +161,7 @@ public class USUARIO {
         ps.close();
         return row;
     }
+
     public int eliminar() throws SQLException {
         String consulta = "UPDATE public.usuario\n"
                 + "	SET estado=?\n"
@@ -171,6 +172,7 @@ public class USUARIO {
         ps.close();
         return row;
     }
+
     public int cambiar_pass() throws SQLException {
         String consulta = "UPDATE public.usuario\n"
                 + "	SET contrasenha=?\n"
@@ -252,6 +254,48 @@ public class USUARIO {
         ps.close();
         rs.close();
         return arr;
+    }
+
+    public JSONArray getPaginationDescueto(int pag, int limit, String busqueda) throws SQLException, JSONException {
+        String consulta = "select array_to_json(array_agg(json.*)) as arr\n"
+                + "from( \n"
+                + "select usuario.*, to_json(descuento.*) as descuentos\n"
+                + "from\n"
+                + "usuario,\n"
+                + "descuento \n"
+                + "where usuario.id = descuento.id_admin\n"
+                + "order by descuento.fecha desc\n"
+                + "limit " + limit + " offset " + (pag * limit) + "\n"
+                + ") json";
+
+        PreparedStatement ps = con.statamet(consulta);
+        ResultSet rs = ps.executeQuery();
+        JSONArray arr = new JSONArray();
+        JSONObject obj;
+        if (rs.next()) {
+            arr = new JSONArray(rs.getString("arr"));
+        }
+        ps.close();
+        rs.close();
+        return arr;
+    }
+
+    public int getDescuentoActual() throws SQLException, JSONException {
+        String consulta = "select descuento.cantidad\n"
+                + "from\n"
+                + "descuento \n"
+                + "order by descuento.fecha desc   \n"
+                + "limit 1";
+
+        PreparedStatement ps = con.statamet(consulta);
+        ResultSet rs = ps.executeQuery();
+        int cantidad = 0;
+        if (rs.next()) {
+            cantidad = rs.getInt("cantidad");
+            }
+        ps.close();
+        rs.close();
+        return cantidad;
     }
 
     public int getCantidad(int estado, String busqueda) throws SQLException, JSONException {

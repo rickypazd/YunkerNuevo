@@ -26,14 +26,14 @@ public class REP_CATEGORIA {
     }
 
     public int Insertar() throws SQLException {
-        String consulta = "INSERT INTO public." + TBL + "(\n"
-                + "	nombre)\n"
-                + "	VALUES (?);";
+        String consulta = "INSERT INTO public.rep_categoria_rec(\n"
+                + "	nombre,estado)\n"
+                + "	VALUES (?,0);";
         PreparedStatement ps = con.statamet(consulta);
 
         ps.setString(1, getNOMBRE());
         ps.execute();
-        consulta = "select last_value from " + TBL + "_id_seq ";
+        consulta = "select last_value from rep_categoria_rec_id_seq ";
         ps = con.statamet(consulta);
         ResultSet rs = ps.executeQuery();
         int id = 0;
@@ -106,8 +106,66 @@ public class REP_CATEGORIA {
         return arr;
     }
 
+    public String getAllJSONbyIdAuto(int id) throws SQLException, JSONException {
+        String consulta = "WITH RECURSIVE recur AS (\n"
+                + "    SELECT\n"
+                + "        rcr.id,\n"
+                + "        rcr.id_padre,\n"
+                + "        1 AS lvl,\n"
+                + "        (\n"
+                + "            SELECT\n"
+                + "                ('[ ' || to_json(rcr.*) || ' ]') AS json)::varchar\n"
+                + "        FROM\n"
+                + "            rep_categoria_rec rcr\n"
+                + "        WHERE\n"
+                + "            rcr.id_padre IS NULL\n"
+                + "        UNION\n"
+                + "        SELECT\n"
+                + "            e.id,\n"
+                + "            e.id_padre,\n"
+                + "            s.lvl + 1, (\n"
+                + "                SELECT\n"
+                + "                    ('[ ' || string_agg(value::TEXT, ', ') || ' ]')::JSON FROM (\n"
+                + "                        SELECT\n"
+                + "                            * FROM json_array_elements(s.json::json)\n"
+                + "                        UNION ALL\n"
+                + "                        SELECT\n"
+                + "                            to_json(e.*)) t)::VARCHAR\n"
+                + "        FROM\n"
+                + "            rep_categoria_rec e\n"
+                + "            INNER JOIN recur s ON s.id = e.id_padre\n"
+                + ")\n"
+                + "select array_to_json(array_agg(resp.*))\n"
+                + "from (\n"
+                + "select *\n"
+                + "from recur rcrf, (\n"
+                + "select \n"
+                + "    rcr.id,count(rcr.id)\n"
+                + "from \n"
+                + "    repuesto rep,\n"
+                + "    rep_to_rep_auto rtra,\n"
+                + "    rep_categoria_rec rcr\n"
+                + "where rtra.id_rep_auto = "+id+"\n"
+                + "and rep.id = rtra.id_repuesto\n"
+                + "and rcr.id = rep.id_rep_categoria\n"
+                + "GROUP by (rcr.id)\n"
+                + ") rcr\n"
+                + "where rcrf.id = rcr.id\n"
+                + ") resp";
+        PreparedStatement ps = con.statamet(consulta);
+        ResultSet rs = ps.executeQuery();
+        
+        String resp = "";
+        while (rs.next()) {
+            resp =rs.getString("array_to_json");
+        }
+        ps.close();
+        rs.close();
+        return resp;
+    }
+
     public int eliminar() throws SQLException {
-        String consulta = "UPDATE public." + TBL + " \n"
+        String consulta = "UPDATE public.rep_categoria_rec \n"
                 + "	SET estado=?\n"
                 + "	WHERE id=" + getID();
         PreparedStatement ps = con.statamet(consulta);

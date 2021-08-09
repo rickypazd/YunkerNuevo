@@ -172,7 +172,9 @@ public class REP_AUTO {
             exprecion += "lower(jsn::varchar) ~ E'" + palabras[i] + "'";
 
         }
-        String consultaCount = "select count(ass.*) from (select to_json(jsn.*) as jsn FROM (select *from rep_auto ra, rep_auto_version rav, rep_auto_modelo ram, rep_auto_marca rama\n"
+        String consultaCount = "select count(ass.*) from ("
+                + "select to_json(jsn.*) as jsn FROM ("
+                + "select * from rep_auto ra, rep_auto_version rav, rep_auto_modelo ram, rep_auto_marca rama\n"
                 + "where ra.estado = 0 \n"
                 + "and ra.id_version = rav.id \n"
                 + "and rav.id_rep_auto_modelo = ram.id\n"
@@ -229,7 +231,7 @@ public class REP_AUTO {
                 + ")\n"
                 + "SELECT array_to_json(array_agg(ra.*)) as json \n"
                 + "FROM (\n"
-                + "    SELECT * \n"
+                + "    SELECT * , pa.id as idp\n"
                 + "    FROM path pa, rep_to_rep_auto rta \n"
                 + "    WHERE pa.id = rta.id_repuesto) AS rb \n"
                 + "RIGHT JOIN (\n"
@@ -245,10 +247,9 @@ public class REP_AUTO {
                 + "	 upper(rama.nombre) LIKE upper('%" + busqueda + "%') OR\n"
                 + "	  upper(rav.nombre) LIKE upper('%" + busqueda + "%'))\n"
                 + "	  order by(rama.nombre,ram.nombre,rav.nombre,ra.anho) ASC\n"
-                + " limit 30"
-                + "            ) AS ra\n"
+                + " limit 30            ) AS ra\n"
                 + "ON ra.id = rb.id_rep_auto\n"
-                + "WHERE rb.id IS null";
+                + "WHERE rb.idp IS null";
         PreparedStatement ps = con.statamet(consulta);
         ps.setInt(1, id_rep);
         ResultSet rs = ps.executeQuery();

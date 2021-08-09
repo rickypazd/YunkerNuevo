@@ -41,7 +41,7 @@ import org.json.JSONObject;
  * @author RICKY
  */
 @MultipartConfig
-@WebServlet(name = "rolesController", urlPatterns = {"/rolesController"})
+@WebServlet(name = "rolesController", urlPatterns = {"/admin/rolesController"})
 public class rolesController extends HttpServlet {
 
     /**

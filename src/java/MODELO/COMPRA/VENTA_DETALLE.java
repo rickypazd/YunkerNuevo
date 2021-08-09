@@ -27,10 +27,10 @@ public class VENTA_DETALLE {
         this.con = con;
     }
 
-    public int Insertar(int id_venta, String nombre, String descripcion, int cantidad,double precio,double sub_total,int tipo_articulo,int id_articulo) throws SQLException {
+    public int Insertar(int id_venta, String nombre, String descripcion, int cantidad,double precio,double sub_total,int tipo_articulo,int id_articulo,int descuento) throws SQLException {
         String consulta = "INSERT INTO public.ven_detalle(\n"
-                + "      id_venta, nombre, descripcion, cantidad, precio, sub_total, tipo_articulo, id_articulo)\n"
-                + "	VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+                + "      id_venta, nombre, descripcion, cantidad, precio, sub_total, tipo_articulo, id_articulo, descuento)\n"
+                + "	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement ps = con.statamet(consulta);
 
         ps.setInt(1, id_venta);
@@ -41,6 +41,7 @@ public class VENTA_DETALLE {
         ps.setDouble(6, sub_total);
         ps.setInt(7, tipo_articulo);
         ps.setInt(8, id_articulo);
+        ps.setInt(9, descuento);
         
 
         ps.execute();
@@ -54,6 +55,26 @@ public class VENTA_DETALLE {
         rs.close();
         ps.close();
         return id;
+    }
+   public int ajustarPlanDePagos(int id_venta, double subTotal) throws SQLException {
+        String consulta = "update venta_plan_cuenta vp\n"
+                + "set monto = vpc.monto\n"
+                + "from (\n"
+                + "select vpc.id, vpc.monto-(\n"
+                + "select "+subTotal+"/(\n"
+                + "select count(*)\n"
+                + "from venta_plan_cuenta vpc\n"
+                + "where vpc.id_venta = "+id_venta+"\n"
+                + "	) \n"
+                + ") as monto\n"
+                + "from venta_plan_cuenta vpc\n"
+                + "where vpc.id_venta = "+id_venta+"\n"
+                + ") vpc\n"
+                + "where vp.id = vpc.id";
+        PreparedStatement ps = con.statamet(consulta);
+        int row = ps.executeUpdate();
+        ps.close();
+        return row;
     }
 
     public int eliminar(int id) throws SQLException {

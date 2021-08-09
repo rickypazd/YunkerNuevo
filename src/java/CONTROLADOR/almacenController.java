@@ -59,7 +59,7 @@ import org.json.JSONObject;
  * @author RICKY
  */
 @MultipartConfig
-@WebServlet(name = "almacenController", urlPatterns = {"/almacenController"})
+@WebServlet(name = "almacenController", urlPatterns = {"/admin/almacenController"})
 
 public class almacenController extends HttpServlet {
 
@@ -116,6 +116,9 @@ public class almacenController extends HttpServlet {
                     break;
 
 //</editor-fold>
+                case "getAll_cardex_paginationJSON":
+                    html = getAll_cardex_paginationJSON(request, con);
+                    break;
             }
         } else {
             RESPUESTA resp = new RESPUESTA(0, "Servisis: Token de acceso erroneo.", "Token denegado", "{}");
@@ -216,7 +219,6 @@ public class almacenController extends HttpServlet {
             return resp.toString();
         }
     }
-    
 
     private String getAll_almacen_pagination(HttpServletRequest request, Conexion con) {
         String nameAlert = "almacen";
@@ -263,13 +265,13 @@ public class almacenController extends HttpServlet {
             return resp.toString();
         }
     }
+
     private String edit_almacen_sec(HttpServletRequest request, Conexion con) {
         String nameAlert = "almacen_sec";
         try {
-            
 
             int id = pInt(request, "id");
-            
+
             int x1 = pInt(request, "x1");
             int y1 = pInt(request, "y1");
             int x2 = pInt(request, "x2");
@@ -306,11 +308,12 @@ public class almacenController extends HttpServlet {
             return resp.toString();
         }
     }
+
     private String eliminar_almacen_sec(HttpServletRequest request, Conexion con) {
         String nameAlert = "almacen";
         try {
             int id = pInt(request, "id");
-             ALMACEN_SEC almacen = new ALMACEN_SEC(con);
+            ALMACEN_SEC almacen = new ALMACEN_SEC(con);
 
             almacen.eliminar(id);
             RESPUESTA resp = new RESPUESTA(1, "", "Exito.", "{}");
@@ -323,6 +326,29 @@ public class almacenController extends HttpServlet {
         }
     }
 
+    private String getAll_cardex_paginationJSON(HttpServletRequest request, Conexion con) {
+        String nameAlert = "cardex";
+        try {
+            int pagina = pInt(request, "pagina");
+            int cantidad = pInt(request, "cantidad");
+            String busqueda = pString(request, "busqueda");
+            ALMACEN almacen =  new ALMACEN(con);
+            
+            
+            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", almacen.getCardexPaginationJSON(pagina, cantidad, busqueda));
+            return resp.toString();
+        } catch (SQLException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al obtener " + nameAlert + ".", "{}");
+            return resp.toString();
+        } catch (JSONException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        }
+    }
     //<editor-fold defaultstate="collapsed" desc="PARSERS">
     private int parseInt(String val) {
         return Integer.parseInt(val);

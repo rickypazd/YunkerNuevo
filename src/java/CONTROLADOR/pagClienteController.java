@@ -109,6 +109,12 @@ public class pagClienteController extends HttpServlet {
                 case "getRepuestoId":
                     html = getRepuestoId(request, con);
                     break;
+                case "getBuscar":
+                    html = getBuscar(request, con);
+                    break;
+                case "getBuscarTienda":
+                    html = getBuscarTienda(request, con);
+                    break;
 
 //</editor-fold>
             }
@@ -183,11 +189,12 @@ public class pagClienteController extends HttpServlet {
             return resp.toString();
         }
     }
+
     private String getRepuestosTop8(HttpServletRequest request, Conexion con) {
         String nameAlert = "Repuestos";
         try {
             REPUESTO repuesto = new REPUESTO(con);
-            
+
             RESPUESTA resp = new RESPUESTA(1, "", "Exito.", repuesto.getTop8());
             return resp.toString();
         } catch (SQLException ex) {
@@ -290,6 +297,53 @@ public class pagClienteController extends HttpServlet {
             RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
             return resp.toString();
         }
+    }
+
+    private String getBuscar(HttpServletRequest request, Conexion con) {
+        String nameAlert = "Repuesto";
+        try {
+
+            String busqueda= pString(request, "busqueda");
+            int pagina= pInt(request, "pag");
+            
+            REPUESTO repuesto = new REPUESTO(con);
+            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", repuesto.getBusquedaGeneral(pagina, 10, busqueda));
+            return resp.toString();
+        } catch (SQLException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al obtener " + nameAlert + ".", "{}");
+            return resp.toString();
+        } catch (JSONException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        }
+
+    }
+    private String getBuscarTienda(HttpServletRequest request, Conexion con) {
+        String nameAlert = "Repuesto";
+        try {
+
+            String busqueda= pString(request, "busqueda");
+            int pagina= pInt(request, "pag");
+            
+            REPUESTO repuesto = new REPUESTO(con);
+            RESPUESTA resp = new RESPUESTA(1, "", "Exito.", repuesto.getBusquedaGeneralTienda(pagina, 100, busqueda));
+            return resp.toString();
+        } catch (SQLException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al obtener " + nameAlert + ".", "{}");
+            return resp.toString();
+        } catch (JSONException ex) {
+            con.rollback();
+            Logger.getLogger(adminController.class.getName()).log(Level.SEVERE, null, ex);
+            RESPUESTA resp = new RESPUESTA(0, ex.getMessage(), "Error al convertir " + nameAlert + " a JSON.", "{}");
+            return resp.toString();
+        }
+
     }
 
 }

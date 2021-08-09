@@ -1,0 +1,73 @@
+#carruselIndex{
+
+    overflow: hidden;
+
+    width: 100%;
+    height: 600px;
+
+}
+#carruselIndex2{
+
+    overflow: hidden;
+        border-right: 10px solid #fff;
+
+    height: 300px;
+
+}
+
+#carruselIndex2 >.carruselAbsolute{
+    position: absolute;
+
+
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+}
+#carruselIndex >.carruselAbsolute{
+    position: absolute;
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+}
+
+
+.carruselIten{
+
+    display: inline-block;
+    width: 200px;
+
+    position: absolute;
+    left: 1px;
+
+
+}
+
+.carruselIten2{
+
+    display: inline-block;
+    width: 200px;
+
+    position: absolute;
+    left: 1px;
+
+
+}
+.carruselBtn{
+    background: #ffffff99;
+
+    width: 100px;
+
+    position: absolute;
+    z-index: 999;
+}
+.carruselBtn:hover{
+    cursor: pointer;
+    background: #2ba8db;
+
+}
+.cbLeft{
+    left: 0px;
+}
+.cbRigth{
+    right: 0px;
+}

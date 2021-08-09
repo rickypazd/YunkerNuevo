@@ -1,0 +1,139 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Servisis</title>
+        <meta name="description" content="Servisis">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="plugin/bootstrap-4.1.1/css/bootstrap-grid.min.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+        <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+
+        <script src="plugin/jquery/jquery.min.js" type="text/javascript"></script>
+        <script src="js/eventos/navBar.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/popper.min.js" type="text/javascript"></script>
+        <script src="plugin/bootstrap-4.1.1/js/bootstrap.min.js" type="text/javascript"></script>
+
+
+        <script src="assets/js/matchHeigh.js" type="text/javascript"></script>
+        <script src="assets/js/main.js"></script>
+        <script src="js/eventos/verifySession.js" type="text/javascript"></script>
+        <script src="js/index.js" type="text/javascript"></script>
+        <script src="js/eventos/load.js" type="text/javascript"></script>
+        <script src="js/Parametros/index.js" type="text/javascript"></script>
+
+        <style>
+
+            .card {
+                padding: 2px;
+                border: 1px solid;
+                height: max-content;
+                overflow: auto;
+                margin: 4px;
+                background: #F6f6f6;
+                text-align: center;
+            }
+
+            .btnLink{
+                height: 50px;
+                margin: 4px;
+            }
+            .btnLink i{
+                
+                margin-right: 4px;
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <div id="right-panel" class="right-panel">
+
+            <div class="content">
+                <!-- Animated -->
+                <div class="animated fadeIn row col-12 ">
+                    <div class="col-md-6">
+
+                        <div class="card">
+                            <h4>Seguridad</h4>
+                            <div class="card-body row justify-content-between ">
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('rolesypermisos.html');"><i class='menu-icon fa fa-unlock-alt'></i>Roles y permisos.</button>
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('UsrList.html');" data-permiso="ver_lista_de_usuarios"><i class='menu-icon fa fa-user-plus'></i>Usuarios.</button>
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('Descuento.html');" data-permiso="ver_lista_de_usuarios"><i class='menu-icon fa fa-user-plus'></i>Descuento.</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                       
+                        <div class="card">
+ <h4>Vehiculos</h4>
+                            <div class="card-body row justify-content-between">
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('VehMarcaList.html');"><i class='menu-icon fa fa-car'></i>Marcas.</button>
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('VehModeloList.html');"><i class='menu-icon fa fa-car'></i>Modelos.</button>
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('VehList.html');"><i class='menu-icon fa fa-car'></i>Vehiculos.</button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                       
+                        <div class="card">
+ <h4>Repuestos</h4>
+                            <div class="card-body row justify-content-between">
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('RepCategoriaList.html');"><i class='menu-icon fa fa-cog'></i>Categorias.</button>                           
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('RepList.html');"><i class='menu-icon fa fa-cog'></i>Repuestos.</button>                           
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('BuscarRepuesto.html');"><i class='menu-icon fa fa-cog'></i>Buscar.</button>                           
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                      
+                        <div class="card">
+  <h4>Indicadores</h4>
+                            <div class="card-body row justify-content-between">
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('IndicadorINEG.html');"><i class='menu-icon fa fa-cog'></i>Compras y ventas.</button>                           
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                     
+                        <div class="card">
+   <h4>Almacenes</h4>
+                            <div class="card-body row justify-content-between row justify-content-between">
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('AlmacenList.html');"><i class='menu-icon fa fa-cog'></i>Almacenes.</button>    
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('CardexList.html');"><i class='menu-icon fa fa-cog'></i>Cardex.</button>    
+                                <br>
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('CompraRep.html');"><i class='menu-icon fa fa-cog'></i>Comprar repuesto.</button>                           
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('CompraList.html');"><i class='menu-icon fa fa-cog'></i>Historial de compras.</button>
+                                <br>
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('VentaRep.html');"><i class='menu-icon fa fa-cog'></i>Vender repuesto.</button>                           
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('VentaList.html');"><i class='menu-icon fa fa-cog'></i>Historial de ventas.</button>                           
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('VentaCuotasList.html');"><i class='menu-icon fa fa-cog'></i>Historial de ventas en cuotas.</button>                           
+                                <br>
+                                <button type="button" class="btn btn-outline-dark btn-sm btnLink" onclick="ver_pagina('ProformaRep.html');"><i class='menu-icon fa fa-cog'></i>Realizar Proforma.</button>                           
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>           
+            <!-- Footer -->
+
+            <!-- /.site-footer -->
+        </div>
+
+    </body>
+</html>

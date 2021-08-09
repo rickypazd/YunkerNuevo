@@ -93,9 +93,10 @@ public class FtpClient {
 
     public static String subirArchibo(Part file, String url, String nombre) throws IOException {
         FtpClient.open();
+ 
         int dbs = 2048;
         boolean isDir;
-
+        
         isDir = ftp.changeWorkingDirectory("/");
         System.out.println(ftp.printWorkingDirectory());
         String arr[] = url.split("/");

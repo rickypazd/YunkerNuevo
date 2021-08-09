@@ -51,7 +51,7 @@ import org.json.JSONObject;
  * @author RICKY
  */
 @MultipartConfig
-@WebServlet(name = "loginController", urlPatterns = {"/loginController"})
+@WebServlet(name = "loginController", urlPatterns = {"/admin/loginController"})
 public class loginController extends HttpServlet {
 
     /**

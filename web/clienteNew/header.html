@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/icons.css" rel="stylesheet" type="text/css"/>
+        <link href="css/btn.css" rel="stylesheet" type="text/css"/>
+        <link href="css/menu.css" rel="stylesheet" type="text/css"/>
+        <style>
+            body{
+                padding: 0;
+                margin: 0;
+                border: 0;
+                font-family: sans-serif;
+                -ms-text-size-adjust: 100%;
+                -webkit-text-size-adjust: 100%;
+            }
+            .barra{
+                position: absolute;
+                width: 100%;
+                height: 144px;
+                background: #2f343b;
+            }
+            .barra_menu{
+                position: absolute;
+                left: 0;
+                width: 70%;
+                height: 100%;
+
+                /*background: #;*/
+            }
+            .bm_top{
+                top: 0;
+                position: relative;
+
+                height: 50%;
+                /*padding: 20px;*/
+            }
+            .bm_boder{
+                height: calc(100%-20px);
+                padding-top: 20px;
+                margin-left: 20px;
+                margin-right: 40px;
+                border-bottom: 1px solid #a3c756;
+            }
+            .bm_bot{
+                position: relative;
+
+                bottom: 0px;
+
+                height: 50%;
+
+            }
+
+            .barra_carrito{
+
+                /*display: inline-block;*/
+                position: absolute;
+                right: 0;
+                width: 30%;
+                height: 100%;
+                background: #2ba8db;
+                /*align-items: center;*/
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .conten_carrito{
+                margin-top: 10px;
+                right:  0;
+                padding: 10px;
+
+                height: 80%;
+                justify-content: center;
+                display: flex;
+            }
+            .btn{
+                padding-top: 30px;
+                text-decoration: none;
+
+                position: relative;
+                height: 70px;
+
+            }
+            .btn i{
+                display: block;
+                margin: 0;
+            }
+
+            .menu-toggle {
+                display: none;
+                position: absolute;
+                left: 0px;
+                top: 15px;
+                font-size: 1.75em;
+                background: transparent;
+                padding: 2px 10px 0 10px;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                color: #fff;
+                cursor: pointer;
+                -webkit-transition: background 0.3s ease;
+                -moz-transition: background 0.3s ease;
+                transition: background 0.3s ease;
+            }
+            .menu-toggle:hover {
+                background: #a3c756;
+            }
+
+            @media (max-width: 767px) {
+                .barra_carrito{
+                    width: 30%;
+                }   
+                .barra_menu{
+
+                    width: 70%;
+
+
+                    /*background: #;*/
+                }
+                .btn{
+                    padding: 10px;
+                }
+                .main{
+
+                    border-top: 1px solid #fff;
+                    position: fixed;
+                    top: 144px;
+
+                    width :100%;
+                    right: 0px;
+                    /* display: inline-block; */
+                    color: #fff;
+                    margin: 0;
+                    background: #2f343b;
+                }
+                .main li{
+                    margin-left: 25px;
+                    margin-right: 25px;
+                    display: block;
+                    border-bottom: 1px solid #2ba8db;
+                }
+                .main a{
+                    color: #fff;
+                }
+
+                .menu-toggle {
+                    display: block;
+                }
+                .oculto{
+                    display: none;
+                }
+            }
+            #cantidadCarrito{
+                width: 100%;
+                display: block;
+                position: relative;
+                margin-right: 0;
+                font-size: 1.2em;
+                font-weight: 300;
+
+            }
+
+
+
+
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="barra"> 
+                <div class="barra_menu">
+                    <div class="bm_top">
+                        <div class="bm_boder">
+                            <a class="logo" href="index.html"><img src="img/logofullpart.png" alt="Servisis" style="max-height: 45px;"/></a>
+                            <ul id="mainMenu" class="main oculto">
+                                <li class="has-submenu"><a href="index.html">Inicio<i class="fa fa-chevron-down"></i></a><!--Class "has-submenu" for proper highlighting and dropdown-->
+
+                                </li>
+                                <li class="has-submenu"><a href="tienda.html">Tienda<i class="fa fa-chevron-down"></i></a>
+
+                                </li>
+
+                                <li class="hide-sm"><a href="buscar.html">Buscar</a></li>
+                                <li class="has-submenu"><a href="carrito.html">Carrito<i class="fa fa-chevron-down"></i></a>
+
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="bm_bot">
+                        <div class="menu-toggle" onclick="showMenu();"><i class="fa fa-list"></i></div>
+                    </div>
+                </div>
+                <div class="barra_carrito">
+                    <div class="conten_carrito">
+                        <a class="btn btn-outlined-invert" href="carrito.html">
+                            <i class="icon-shopping-cart-content"></i>
+                            <span id="cantidadCarrito">0</span>
+                        </a>
+                    </div>
+                     <div class="cart-dropdown">
+                            <span></span><!--Small rectangle to overlap Cart button-->
+                            <div class="body">
+                                <table id="itensCarrito">
+                                    <tr>
+                                        <th>Repuesto</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                    </tr>
+
+
+
+                                </table>
+                            </div>
+                            <div class="footer group">
+                                <div class="buttons">
+                                    <!--<a class="btn btn-outlined-invert" href="checkout.html"><i class="icon-download"></i>Checkout</a>-->
+                                    <a class="btn btn-outlined-invert" href="carrito.html"><i class="icon-shopping-cart-content"></i>Carrito</a>
+                                </div>
+                                <div class="total " id="totalCarrito">0 Bs.</div>
+                            </div>
+                        </div><!--Cart Dropdown Close-->
+
+                </div>
+            </div>
+        </header>
+        <script type="text/javascript">
+            function showMenu() {
+                var mainMenu = document.getElementById("mainMenu");
+                console.log(mainMenu.className);
+                if (mainMenu.className.includes("oculto")) {
+                    console.log(true);
+                    mainMenu.className = mainMenu.className.replace("oculto", "");
+                } else {
+                    mainMenu.className += " oculto";
+                }
+            }
+        </script>
+    </body>
+</html>

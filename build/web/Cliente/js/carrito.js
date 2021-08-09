@@ -46,9 +46,9 @@ function itenCarritoPa(obj) {
    // obj = $.parseJSON(obj);
 
     var html = " <tr class='item' data-carrito='" + JSON.stringify(obj) + "'>";
-    html += "                            <td class='thumb'><a href='repuesto.html?id=" + obj.id + "'><img src='../" + obj.url_foto + "' alt='img'></a></td>";
+    html += "                            <td class='thumb'><a href='repuesto.html?id=" + obj.id + "'><img src='../admin/" + obj.url_foto + "' alt='img'></a></td>";
     html += "                            <td class='name'><a href='repuesto.html?id=" + obj.id + "'>" + obj.nombre + "</a></td>";
-    html += "                            <td class='price'>" + obj.precio + " Bs.</td>";
+    html += "                            <td class='price'>" + (obj.precio || 0) + " Bs.</td>";
     html += "                            <td class='qnt-count'>";
     html += "                                <a class='incr-btn' href='#'>-</a>";
     html += "                                <input class='quantity form-control' type='text' value='" + obj.cantidad + "' onchange='recalcule(this);'>";

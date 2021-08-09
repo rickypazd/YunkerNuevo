@@ -32,16 +32,16 @@ public class TIENDA {
                 + "    SELECT (\n"
                 + "            SELECT array_to_json(array_agg(res.*))\n"
                 + "FROM (\n"
-                + "SELECT * ,(\n"
-                + "    SELECT array_to_json(array_agg(rsc.*)) as sub_categorias\n"
-                + "    FROM  rep_sub_categoria rsc\n"
-                + "        WHERE id_rep_categoria = rc.id\n"
-                + "        AND rsc.estado = 0 \n"
-                + "        \n"
-                + "   \n"
-                + ") \n"
-                + "FROM rep_categoria rc\n"
-                + "WHERE rc.estado = 0 \n"
+                + "select rcr.* ,(\n"
+                + "    \n"
+                + "    select array_to_json(array_agg(rcr_h.*)) as sub_categorias\n"
+                + "    from rep_categoria_rec rcr_h\n"
+                + "    where rcr.id = rcr_h.id_padre\n"
+                + "    and rcr_h.estado = 0\n"
+                + ") sub_categorias\n"
+                + "from rep_categoria_rec rcr\n"
+                + "where rcr.id_padre is null\n"
+                + "and rcr.estado = 0\n"
                 + ") res\n"
                 + "        ) AS categorias,\n"
                 + "           (\n"
@@ -136,18 +136,17 @@ public class TIENDA {
                 + ")\n"
                 + "SELECT ARRAY_to_json(array_agg(rsq.*)) as json\n"
                 + "FROM (\n"
-                + "   SELECT pa.json, tblrep.*, tblrsc.nombre as nombresubcat, tblrc.nombre as nombrecat, (SELECT COUNT(car.id_repuesto) FROM cardex car\n"
+                + "   SELECT pa.json, tblrep.*, (SELECT COUNT(car.id_repuesto) FROM cardex car\n"
                 + "                WHERE car.id_repuesto = tblrep.id\n"
                 + "                AND car.estado = 0\n"
                 + "                GROUP BY (car.id_repuesto)) AS cantidad \n"
                 + "       FROM (\n"
-                + "            SELECT pat.id, cast(pat.json AS jsonb) FROM path pat) pa, repuesto tblrep, rep_sub_categoria tblrsc, rep_categoria tblrc\n"
-                + "        WHERE pa.id = tblrep.id\n"
-                + "        AND tblrep.id_rep_sub_categoria = tblrsc.id\n"
-                + "        AND tblrc.id = tblrsc.id_rep_categoria\n";
-               consulta+= construirBusqueda(busquedas);
-               
-               consulta += " ) AS rsq";
+                + "            SELECT pat.id, cast(pat.json AS jsonb) FROM path pat) pa, repuesto tblrep\n"
+                + "        WHERE pa.id = tblrep.id LIMIT 12 \n";
+                
+        consulta += construirBusqueda(busquedas);
+
+        consulta += " ) AS rsq";
 
         PreparedStatement ps = con.statamet(consulta);
         String resp = "";
@@ -165,7 +164,7 @@ public class TIENDA {
             return "";
         }
         JSONObject obj;
-        if(arr.length()<=0){
+        if (arr.length() <= 0) {
             return "";
         }
         String resp = "";
@@ -173,7 +172,7 @@ public class TIENDA {
         ArrayList<String> buscat = new ArrayList();
         for (int i = 0; i < arr.length(); i++) {
             obj = arr.getJSONObject(i);
-            
+
             switch (obj.getInt("tipo")) {
                 case 0: //ID CATEGORIA
                     buscat.add(" tblrc.id = " + obj.getInt("id_relacion"));
@@ -193,28 +192,27 @@ public class TIENDA {
 
         }
         for (int i = 0; i < busVeh.size(); i++) {
-            if(i==0){
+            if (i == 0) {
                 resp += " AND ( ";
-            }else{
+            } else {
                 resp += " OR ";
             }
-                resp += busVeh.get(i);
-            if(i==busVeh.size()-1){
+            resp += busVeh.get(i);
+            if (i == busVeh.size() - 1) {
                 resp += " ) ";
             }
         }
-         for (int i = 0; i < buscat.size(); i++) {
-            if(i==0){
+        for (int i = 0; i < buscat.size(); i++) {
+            if (i == 0) {
                 resp += " AND ( ";
-            }else{
+            } else {
                 resp += " OR ";
             }
-                resp += buscat.get(i);
-            if(i==buscat.size()-1){
+            resp += buscat.get(i);
+            if (i == buscat.size() - 1) {
                 resp += " ) ";
             }
         }
         return resp;
     }
 }
-
