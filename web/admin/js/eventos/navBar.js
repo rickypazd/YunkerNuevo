@@ -60,39 +60,41 @@ function cargar() {
     html += "            <div id='main-menu' class='main-menu collapse navbar-collapse'>";
     html += "                <ul class='nav navbar-nav' id='listaBotones'>";
     html += "                    <li class='nav-item'  data-url='index.html'>";
-    html += "                        <a href='index.html'><i class='menu-icon fa fa-laptop'></i>Inicio</a>";
+    html += "                        <a href='/admin/index.html'><i class='menu-icon fa fa-laptop'></i>Inicio</a>";
     html += "                    </li>";
     
     html += "                    <li class='menu-title'>Repuestos</li>";
-    html += "                    <li class='nav-item' data-url='RepCategoriaList.html' ><a href='RepCategoriaList.html'><i class='menu-icon fa fa-cog'></i>Categorias.</a></li>";
-    html += "                    <li class='nav-item' data-url='RepList.html' ><a href='RepList.html'><i class='menu-icon fa fa-cog'></i>Repuestos.</a></li>";
-    html += "                    <li class='nav-item' data-url='BuscarRepuesto.html' ><a href='BuscarRepuesto.html'><i class='menu-icon fa fa-cog'></i>Buscar Repuestos.</a></li>";
+    html += "                    <li class='nav-item' data-url='RepCategoriaList.html' ><a href='/admin/RepCategoriaList.html'><i class='menu-icon fa fa-cog'></i>Categorias.</a></li>";
+    html += "                    <li class='nav-item' data-url='RepList.html' ><a href='/admin/RepList.html'><i class='menu-icon fa fa-cog'></i>Repuestos.</a></li>";
+    html += "                    <li class='nav-item' data-url='BuscarRepuesto.html' ><a href='/admin/BuscarRepuesto.html'><i class='menu-icon fa fa-cog'></i>Buscar Repuestos.</a></li>";
     
     
     html += "                    <li class='menu-title'>Almacen</li>";
-    html += "                    <li class='nav-item' data-url='AlmacenList.html' ><a href='AlmacenList.html'><i class='menu-icon fa fa-cog'></i>Alamacenes.</a></li>";
-    html += "                    <li class='nav-item' data-url='CardexList.html' ><a href='CardexList.html'><i class='menu-icon fa fa-cog'></i>Cardex.</a></li>";
-    html += "                    <li class='nav-item' data-url='CompraRep.html' ><a href='CompraRep.html'><i class='menu-icon fa fa-cog'></i>Comprar repuesto.</a></li>";
-    html += "                    <li class='nav-item' data-url='CompraList.html' ><a href='CompraList.html'><i class='menu-icon fa fa-cog'></i>Historial de compras.</a></li>";
-    html += "                    <li class='nav-item' data-url='VentaRep.html' ><a href='VentaRep.html'><i class='menu-icon fa fa-cog'></i>Vender repuesto.</a></li>";
-    html += "                    <li class='nav-item' data-url='VentaList.html' ><a href='VentaList.html'><i class='menu-icon fa fa-cog'></i>Historial de ventas.</a></li>";
-    html += "                    <li class='nav-item' data-url='VentaCuotasList.html' ><a href='VentaCuotasList.html'><i class='menu-icon fa fa-cog'></i> Ventas en cuotas.</a></li>";
-    html += "                    <li class='nav-item' data-url='ProformaRep.html' ><a href='ProformaRep.html'><i class='menu-icon fa fa-cog'></i>Realizar Proforma.</a></li>";
+    html += "                    <li class='nav-item' data-url='AlmacenList.html' ><a href='/admin/AlmacenList.html'><i class='menu-icon fa fa-cog'></i>Alamacenes.</a></li>";
+    html += "                    <li class='nav-item' data-url='CardexList.html' ><a href='/admin/CardexList.html'><i class='menu-icon fa fa-cog'></i>Cardex.</a></li>";
+    html += "                    <li class='nav-item' data-url='CompraRep.html' ><a href='/admin/CompraRep.html'><i class='menu-icon fa fa-cog'></i>Comprar repuesto.</a></li>";
+    html += "                    <li class='nav-item' data-url='CompraList.html' ><a href='/admin/CompraList.html'><i class='menu-icon fa fa-cog'></i>Historial de compras.</a></li>";
+    html += "                    <li class='nav-item' data-url='VentaRep.html' ><a href='/admin/VentaRep.html'><i class='menu-icon fa fa-cog'></i>Vender repuesto.</a></li>";
+    html += "                    <li class='nav-item' data-url='VentaList.html' ><a href='/admin/VentaList.html'><i class='menu-icon fa fa-cog'></i>Historial de ventas.</a></li>";
+    html += "                    <li class='nav-item' data-url='VentaCuotasList.html' ><a href='/admin/VentaCuotasList.html'><i class='menu-icon fa fa-cog'></i> Ventas en cuotas.</a></li>";
+    html += "                    <li class='nav-item' data-url='ProformaRep.html' ><a href='/admin/ProformaRep.html'><i class='menu-icon fa fa-cog'></i>Realizar Proforma.</a></li>";
     
     html += "                    <li class='menu-title'>Vehiculos</li>";
-    html += "                    <li class='nav-item' data-url='VehMarcaList.html'><a href='VehMarcaList.html'><i class='menu-icon fa fa-car'></i>Marcas.</a></li>";
-    html += "                    <li class='nav-item' data-url='VehModeloList.html' ><a href='VehModeloList.html'><i class='menu-icon fa fa-car'></i>Modelos.</a></li>";
-    html += "                    <li class='nav-item' data-url='VehList.html' ><a href='VehList.html'><i class='menu-icon fa fa-car'></i>Vehiculos.</a></li>";
+    html += "                    <li class='nav-item' data-url='VehMarcaList.html'><a href='/admin/VehMarcaList.html'><i class='menu-icon fa fa-car'></i>Marcas.</a></li>";
+    html += "                    <li class='nav-item' data-url='VehModeloList.html' ><a href='/admin/VehModeloList.html'><i class='menu-icon fa fa-car'></i>Modelos.</a></li>";
+    html += "                    <li class='nav-item' data-url='VehList.html' ><a href='/admin/VehList.html'><i class='menu-icon fa fa-car'></i>Vehiculos.</a></li>";
     
     
     html += "                    <li class='menu-title'>RRHH</li>";
-    html += "                    <li class='nav-item' data-url='rolesypermisos.html'><a href='rolesypermisos.html'><i class='menu-icon fa fa-unlock-alt'></i>Roles y permisos.</a></li>";
-    html += "                    <li class='nav-item' data-url='UsrList.html'><a href='UsrList.html'><i class='menu-icon fa fa-user-plus'></i>Usuarios.</a></li>";
-    html += "                    <li class='nav-item' data-url='Descuento.html'><a href='Descuento.html'><i class='menu-icon fa fa-user-plus'></i>Descuentos.</a></li>";
+    html += "                    <li class='nav-item' data-url='rolesypermisos.html'><a href='/admin/rolesypermisos.html'><i class='menu-icon fa fa-unlock-alt'></i>Roles y permisos.</a></li>";
+    html += "                    <li class='nav-item' data-url='UsrList.html'><a href='/admin/UsrList.html'><i class='menu-icon fa fa-user-plus'></i>Usuarios.</a></li>";
+    html += "                    <li class='nav-item' data-url='Descuento.html'><a href='/admin/Descuento.html'><i class='menu-icon fa fa-user-plus'></i>Descuentos.</a></li>";
     
     
     html += "                    <li class='menu-title'>Indicadores</li>";
-    html += "                    <li class='nav-item' data-url='IndicadorINEG.html' ><a href='IndicadorINEG.html'><i class='menu-icon fa fa-cog'></i>Compras y ventas.</a></li>";
+    html += "                    <li class='nav-item' data-url='IndicadorINEG.html' ><a href='/admin/IndicadorINEG.html'><i class='menu-icon fa fa-cog'></i>Compras y ventas.</a></li>";
+    html += "                    <li class='menu-title'>Develop</li>";
+    html += "                    <li class='nav-item' data-url='/admin/test1' ><a href='/admin/test1'><i class='menu-icon fa fa-cog'></i>/admin/test1</a></li>";
   
     html += "                </ul>";
     html += "           </div><!-- /.navbar-collapse -->";

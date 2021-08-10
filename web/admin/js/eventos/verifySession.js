@@ -14,7 +14,7 @@ $(document).ready(function () {
 });
 function reloadVerify() {
     if (!sessionStorage.getItem("usr_log")) {
-        window.location.href = "Login.html";
+        window.location.href = "/admin/Login.html";
     } else {
         var arr = $("body").find("[data-permiso]");
         var usr_log = $.parseJSON(sessionStorage.getItem("usr_log"));
