@@ -13,10 +13,6 @@
         </group>
         <group name="ATELServer"/>
         <group name="AdminSolicitudes"/>
-        <group>
-            <file>file:/Users/rickypazd/Documents/GitHub/YunkerNuevo/web/admin/js/eventos/navBar.js</file>
-            <file>file:/Users/rickypazd/Documents/GitHub/YunkerNuevo/web/admin/test1/index.js</file>
-            <file>file:/Users/rickypazd/Documents/GitHub/YunkerNuevo/web/admin/test1/index.html</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
